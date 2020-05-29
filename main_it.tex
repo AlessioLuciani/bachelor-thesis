@@ -1,0 +1,36 @@
+% !TeX encoding = UTF-8
+% !TeX program = pdflatex
+% !TeX spellcheck = it_IT
+\documentclass[binding=0.6cm,TFA]{sapthesis}
+\usepackage{microtype} \usepackage[italian]{babel}
+\usepackage[utf8]{inputenc} \usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{import}
+\hypersetup{pdftitle={La mia tesi},pdfauthor={Alessio Luciani}}
+\title{La mia tesi ...} \author{Alessio Luciani}
+\IDnumber{1797637}
+\course{Corso di laurea in Informatica}
+\courseorganizer{Facoltà di Ingegneria dell'Informazione, Informatica e Statistica} \AcademicYear{2019/2020}
+\copyyear{2020} \advisor{Emanuele Panizzi}
+\tutor{}\tutorcoord{}
+\authoremail{alessio99.luciani@gmail.com}
+\schoolname{Università degli Studi di Roma "La Sapienza"} \schooladdress{Piazzale Aldo Moro 5, 00185 Roma}
+\schoolwebsite{https://www.sapienzaapps.it/} 
+\begin{document}
+\frontmatter
+\maketitle
+\dedication{Alla mia famiglia}
+\tableofcontents
+\mainmatter
+\Large
+\import{./chapters/it}{introduzione}
+\import{./chapters/it}{raccolta_dati}
+\import{./chapters/it}{contributo_utente}
+\import{./chapters/it}{rappresentazione_parcheggi}
+\backmatter
+\cleardoublepage
+\phantomsection % Give this command only if hyperref is loaded
+\addcontentsline{toc}{chapter}{\bibname}
+% Here put the code for the bibliography. You can use BibTeX or
+% the BibLaTeX package or the simple environment thebibliography.
+\end{document}
