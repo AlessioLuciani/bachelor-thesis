@@ -1,6 +1,7 @@
 \chapter{Raccolta dati dei parcheggi}
 \section{Procedura} 
 
+\subsection{Raccolta}
 Al fine di poter creare un classificatore per i tipi di parcheggio, la prima cosa
 che è risultata necessaria è stata una raccolta di dati. In particolare, questi dati
 dovevano essere di buona qualità, generati in maniera controllata e avere una chiara
@@ -18,8 +19,8 @@ raccoglimento installato all'interno dell'app GeneroCity. Inizialmente, questo e
 solo nella versione iOS dell'app, ma successivamente, è stato fatto il porting anche sulla
 versione Android. Questa operazione ha reso possibile che il numero di persone dedicate alla
 raccolta di dati aumentasse significativamente.\\
-Sfruttando degli eventi generati automaticamente dall'app, come ad esempio l'ingresso e
-l'uscita dall'auto, è stato possibile far partire e interrompere la raccolta, senza troppa
+Sfruttando alcuni eventi generati automaticamente dall'app, come ad esempio l'ingresso e
+l'uscita dall'auto, è stato possibile avviare e interrompere la raccolta, senza troppa
 pressione o attenzione dell'utente. Quindi l'interazione da parte dell'utente,
 durante il percorso in auto, è stata minima, se non inesistente. Il processo prevedeva soltanto
 che l'utente entrasse in macchina, facesse il suo viaggio e infine uscisse. Nel frattempo 
@@ -34,7 +35,29 @@ che semplificasse l'operazione a chi la stava eseguendo. La modalità che è sem
 invasiva è stata quella di inviare una notifica a colui che avesse appena effettuato un
 parcheggio, chiedendo di cliccare su un pulsante che classificasse il tipo di parcheggio, 
 distinguendo qualche opzione. Questa informazione veniva poi salvata insieme alla registrazione
-dei sensori, all'interno del database.\\
+dei sensori, all'interno del database. Si può notare che, anche in questo caso, l'interazione
+dell'utente è stata minima. Infatti, la notifica veniva mostrata ad esso in maniera automatica,
+dopo qualche secondo dall'uscita dalla macchina e chiaramente l'utente stesso aveva la possibilità
+di effettuare la scelta del tipo di parcheggio in un secondo momento.\\
+L'importanza di affidare questa responsabilità ad utenti fidati è dovuta principalmente al fatto
+che selezionare il corretto tipo di parcheggio risulta un operazione cruciale al fine di ottenere
+un modello accurato, che sia in grado di effettuare una distinzione chiara tra le diverse tipologie
+di parcheggio. Un'utente qualsiasi, invece, potrebbe selezionare un'etichetta errata per svariati
+motivi, come un'idea confusa riguardo le diverse tipologie di parcheggi, oppure una scarsa volontà
+di collaborazione che potrebbe indurlo a selezionare un tipo randomico. Si può ben intuire che la
+selezione di un tipo randomico, tra le varie opzioni proposte, da' un contributo deleterio e quindi
+peggiore al caso in cui l'utente non rispondesse proprio alla notifica inviata e quindi non selezionasse
+alcun tipo per uno specifico parcheggio. Tuttavia, anche quando ad effettuare l'operazione vi è una
+persona che ha ben chiaro come comportarsi, è possibile che degli errori vengano commessi. Infatti,
+in alcune situazioni possono sollevarsi diversi dubbi o indecisioni. Potrebbe accadere che un parcheggio
+abbia una disposizione inusuale, diversa dalle più comuni e quindi particolarmente complicata da
+individuare. Oppure, è possibile che un parcheggio venga effettuato con una manovra molto diversa dalle
+più frequenti, per motivi che possono essere dovuti alla condizione del traffico, alla disposizione di
+altri veicoli circostanti, allo stile di guida o all'urgenza del guidatore, ecc\dots A causa di questi
+motivi, il dataset ottenuto non può essere considerato privo di difetti, ma si è cercato, attraverso
+queste accortezze, di ottenere una qualità dei dati migliore possibile.
+
+\subsection{Processamento dei dati}
 
 
 
