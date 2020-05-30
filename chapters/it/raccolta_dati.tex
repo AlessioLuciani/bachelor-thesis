@@ -1,19 +1,47 @@
 \chapter{Raccolta dati dei parcheggi}
 \section{Procedura} 
 
-
-
-
-
+Al fine di poter creare un classificatore per i tipi di parcheggio, la prima cosa
+che è risultata necessaria è stata una raccolta di dati. In particolare, questi dati
+dovevano essere di buona qualità, generati in maniera controllata e avere una chiara
+classificazione che gli permetta di essere utilizzabili per un processo di training. 
+Per questo motivo è stato importante che la raccolta fosse portata
+avanti da poche persone fidate che fossero in grado di eseguire una serie di azioni
+commettendo il minor numero di errori possibile.\\
+Dal momento che il modello classificatore in questione è destinato ad essere utilizzato
+su applicativi mobile, e più in particolare sull'app GeneroCity, i dati che quest'ultimo
+riceve come input devono provenire da sensori che si trovano direttamente sullo smartphone.
+Così facendo, la modalità più ovvia di raccolta dei dati risulta essere esattamente 
+quella di sfruttare gli stessi sensori dello smartphone.\\
+Coloro che hanno avuto il compito di raccogliere i dati, erano disposti di un sistema di
+raccoglimento installato all'interno dell'app GeneroCity. Inizialmente, questo era presente
+solo nella versione iOS dell'app, ma successivamente, è stato fatto il porting anche sulla
+versione Android. Questa operazione ha reso possibile che il numero di persone dedicate alla
+raccolta di dati aumentasse significativamente.\\
+Sfruttando degli eventi generati automaticamente dall'app, come ad esempio l'ingresso e
+l'uscita dall'auto, è stato possibile far partire e interrompere la raccolta, senza troppa
+pressione o attenzione dell'utente. Quindi l'interazione da parte dell'utente,
+durante il percorso in auto, è stata minima, se non inesistente. Il processo prevedeva soltanto
+che l'utente entrasse in macchina, facesse il suo viaggio e infine uscisse. Nel frattempo 
+l'app si occupava di raccogliere i dati e caricarli su un database in automatico. In questo
+modo, non solo le persone addette alla raccolta non hanno dovuto avere troppe accortezze, ma
+inoltre hanno potuto integrare la raccolta con le loro abitudini quotidiane, senza dover
+dedicare tempo e sforzi extra solemente per questo scopo. Infatti, qualvolta essi hanno
+utilizzato l'auto nella loro vita quotidiana, hanno potuto aggiungere una, o più registrazioni
+al database. \\
+Anche per quanto riguarda la classificazione del tipo di parcheggio, si è cercato un approccio
+che semplificasse l'operazione a chi la stava eseguendo. La modalità che è sembrata meno 
+invasiva è stata quella di inviare una notifica a colui che avesse appena effettuato un
+parcheggio, chiedendo di cliccare su un pulsante che classificasse il tipo di parcheggio, 
+distinguendo qualche opzione. Questa informazione veniva poi salvata insieme alla registrazione
+dei sensori, all'interno del database.\\
 
 
 
 \section{Sensori utilizzati} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 \section{Pulitura e processamento dei dati} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 \section{Modelli ML utilizzati} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+% TODO: add Simulation ...
+% TODO: add Python -> Swift porting of data processor (Explain all of it and add it as a section)
