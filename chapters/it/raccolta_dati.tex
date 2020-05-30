@@ -3,7 +3,7 @@
 
 \subsection{Raccolta}
 Al fine di poter creare un classificatore per i tipi di parcheggio, la prima cosa
-che è risultata necessaria è stata una raccolta di dati. In particolare, questi dati
+che è risultata necessaria è stata una raccolta di dati d natura time-series. In particolare, questi dati
 dovevano essere di buona qualità, generati in maniera controllata e avere una chiara
 classificazione che gli permetta di essere utilizzabili per un processo di training. 
 Per questo motivo è stato importante che la raccolta fosse portata
@@ -57,8 +57,25 @@ altri veicoli circostanti, allo stile di guida o all'urgenza del guidatore, ecc\
 motivi, il dataset ottenuto non può essere considerato privo di difetti, ma si è cercato, attraverso
 queste accortezze, di ottenere una qualità dei dati migliore possibile.
 
-\subsection{Processamento dei dati}
+\subsection{Processamento}
 
+Benchè i dati raccolti si trovassero in buono stato e strutturati in maniera adeguata per 
+essere utilizzati con lo scopo di effettuare il training per un modello ML che classificasse
+i tipi di parcheggio, essi non potevano essere considerati "puliti" e pronti all'utilizzo.
+Tra le diverse cose, essi contenevano informazioni aggiuntive e fuorvianti che avrebbero
+peggiorato le performance del classificatore. Un esempio è composto da tutti i dati raccolti
+dal momento in cui il parcheggio viene terminato, fino a quando l'app non termina la raccolta,
+dopo che l'utente è uscito dall'auto.\\
+Addizionalmente alla pulitura iniziale, i dati vanno incontro anche ad un intensa sequenza
+di operazioni che cercano di esaltare e isolare le feature più significative che possono
+essere analizzate dal classificatore. Una delle operazioni che può essere presa come esempio 
+consiste nelle rotazioni 3D che vengono applicate ai dati degli accelerometri e dei giroscopi
+per fare in modo che questi ultimi risultino come se fossero stati raccolti con lo smartphone
+orientato sempre allo stesso modo rispetto all'auto.\\
+Dunque, è stato realizzato uno script in grado di scaricare tutti le registrazioni di dati
+presenti nel database e applicarvi queste operazioni per ottenere il risultato finale.
+Al termine di ciò i dati sono stati organizzati in un formato accettato in input dal 
+modello classificatore.
 
 
 \section{Sensori utilizzati} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -67,4 +84,3 @@ queste accortezze, di ottenere una qualità dei dati migliore possibile.
 
 
 % TODO: add Simulation ...
-% TODO: add Python -> Swift porting of data processor (Explain all of it and add it as a section)
