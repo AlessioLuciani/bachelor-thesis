@@ -1,5 +1,5 @@
 \chapter{Raccolta dati dei parcheggi}
-\section{Procedura} 
+\section{Procedura generale} 
 
 \subsection{Raccolta}
 Al fine di poter creare un classificatore per i tipi di parcheggio, la prima cosa
@@ -78,7 +78,79 @@ Al termine di ciò i dati sono stati organizzati in un formato accettato in inpu
 modello classificatore.
 
 
-\section{Sensori utilizzati} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\section{Sensori utilizzati} 
+
+Come già anticipato, la procedura di raccolta dei dati è avvenuta all'interno dell'
+app GeneroCity, su entrambi i sistemi operativi iOS e Android. L'idea di base è stata
+quella di utilizzare un oggetto raccoglitore che venisse richiamato in maniera
+asincrona, all'interno di un thread dedicato. Il fatto di utilizzare un thread a parte
+ha reso possibile un campionamento con cadenza fissa che non creasse interruzioni al
+resto dell'app.\\
+Sono stati scelti alcuni sensori, i quali dati sarebbero stati utili per l'estrazione
+di feature da inviare come input al classificatore. Questi sensori sono principalmente:
+\begin{itemize}
+    \item bussola
+    \item accelerometri
+    \item giroscopi
+    \item GPS per la velocità
+\end{itemize}
+Con una certa cadenza, il raccoglitore registra i vari valori e li indicizza
+attraverso il timestamp dello specifico istante. Questa indicizzazione fa in modo
+che i dati possano avere l'informazione sulla sequenza temporale delle varie
+registrazioni e quindi possono essere trattati come dati di tipo time-series.
+
+\subsection{Implementazione su iOS}
+
+La prima implementazione del raccoglitore è stata fatta per l'ambiente iOS.\\
+\'E stato definita una classe \emph{ParkTypeSampleCollector}, da cui poter creare
+istanze di raccoglitori. All'interno dell'app, un raccoglitore viene attribuito ad
+un'auto \emph{Car}, in quanto ha lo scopo di raccogliere i dati durante i tragitti 
+percorsi da quella determinata macchina.\\
+Al \emph{ParkTypeSampleCollector} è stata impostata una cadenza costante di 0.1
+secondi, in modo da avere un tasso di campionamento abbastanza elevato, in grado
+di distinguere piccole variazioni in campioni consecutivi.\\
+Per i singoli campioni è stata definita una struttura \emph{Sample}, contenente
+una serie di valori:
+\begin{itemize}
+    \item \emph{heading}: consiste nell'angolo tra la punta dello smartphone è il nord geografico,
+    rappresentato in gradi.
+    \item \emph{acceleration}: contiene i tre componenti dell'accelerazione ottenuti attraverso 
+    gli accelerometri e processati direttamente dalla libreria \emph{CoreMotion}. 
+    Questo significa che i tre componenti relativi ai tre assi non contengono più
+    l'informazione sulla gravità, questa è stata sottratta automaticamente.
+    \item \emph{rotationRate}: similmente, contiene i tre componenti estratti dai giroscopi
+    e adeguatamente processati.
+    \item \emph{speed}: consiste nell'attuale velocità calcolata dal dispositivo ed ottenuta 
+    grazie alla libreria \emph{CoreLocation}.
+\end{itemize}
+
+Il \emph{ParkTypeSampleCollector} è dotato di un buffer di \emph{Sample} di dimensione fissa.
+Questo buffer è utilizzato per salvare la sequenza di campioni che vengono raccolti durante
+il tragitto. In quanto l'obiettivo finale è quello di utilizzare i dati per classificare 
+il tipo di un parcheggio, è necessario salvare soltanto i campioni che sono stati raccolti 
+in momenti temporalmente vicini al termine del parcheggio. Chiaramente non si può sapere a 
+priori quanto tempo impiegherà l'utente a parcheggiare, così la raccolta viene avviata
+alla partenza dell'auto. Nonostante questo, per evitare di occupare grandi quantità di
+memoria con dati che alla fine verranno eliminati, si è pensato di aggiungere campioni al
+buffer, fino al suo riempimento, e successivamente aggiungere un potenziale nuovo campione 
+rimpiazzando il meno recente presente nel buffer. Questa operazione è stata implementata
+in tempo costante, grazie ad un indice utilizzato in aggiunta. Dal momento che non vengono
+salvati i timestamp "reali" relativi ai singoli campioni, dei timestamp verranno calcolati
+dinamicamente al termine utilizzando gli indici del buffer e l'intervallo di campionamento.
+La dimensione che è stata scelta per il buffer è di 2048 elementi, che si traducono in una
+registrazione finale che coprirà un intervallo di tempo che dura al massimo qualche minuto.\\
+Il raccoglitore viene azionato ogni volta che passa la quantità di tempo relativo all'
+intervallo di campionamento. Ovvero, all'avvio del raccoglitore, ha inizio un ciclo che
+termina solamente quando l'auto è stata parcheggiata. Ad ogni iterazione viene aggiunto un
+nuovo campione al buffer e poi viene effettuata un'attesa, prima che si passi all'iterazione
+successiva. L'intero ciclo viene eseguito asincronamente utilizzando la chiamata
+\emph{DispatchQueue.global().async}, fornita da iOS. Ciò che fa questa funzione è
+accodare una funzione, fornita dallo sviluppatore, alla coda di esecuzione globale del
+sistema operativo, in maniera asincrona.
+
+
+
+
 \section{Pulitura e processamento dei dati} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 \section{Modelli ML utilizzati} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
