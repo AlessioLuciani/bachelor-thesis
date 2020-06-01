@@ -17,8 +17,8 @@ quella di sfruttare gli stessi sensori dello smartphone.\\
 Coloro che hanno avuto il compito di raccogliere i dati, erano disposti di un sistema di
 raccoglimento installato all'interno dell'app GeneroCity. Inizialmente, questo era presente
 solo nella versione iOS dell'app, ma successivamente, è stato fatto il porting anche sulla
-versione Android. Questa operazione ha reso possibile che il numero di persone dedicate alla
-raccolta di dati aumentasse significativamente.\\
+versione Android. Questa operazione ha reso possibile che il numero di persone disponibili
+per la raccolta di dati aumentasse significativamente.\\
 Sfruttando alcuni eventi generati automaticamente dall'app, come ad esempio l'ingresso e
 l'uscita dall'auto, è stato possibile avviare e interrompere la raccolta, senza troppa
 pressione o attenzione dell'utente. Quindi l'interazione da parte dell'utente,
@@ -151,9 +151,31 @@ L'avvio e la terminazione del raccoglitore vengono eseguiti rispettivamente nei 
 \emph{unpark()} e \emph{park()} dell'istanza di \emph{Car}. Quindi, quando l'auto 
 esce dal parcheggio all'inizio del tragitto e quando parcheggia al termine di esso.
 
-\section{Caricamento dati nel DB}
+\section{Caricamento dati nel database}
 
-\section{Pulitura e processamento dei dati} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Al termine di ogni registrazione, i dati raccolti devono essere caricati nel database.
+Come formato di salvataggio delle registrazioni è stato scelto JSON. Quindi, non appena
+il raccoglitore termina la raccolta, il buffer ottenuto deve essere convertito in un 
+oggetto JSON. In particolare, questo avviene ponendo, come chiavi dell'oggetto, i timestamp
+calcolati rispetto al primo elemento. Ad ogni chiave viene associato un'array di valori, che
+contiene tutti i dati ottenuti dal campione di quello specifico istante. Così l'array è
+composto da:
+\begin{itemize}
+    \item \emph{heading}
+    \item I tre componenti singoli ottenuti da \emph{acceleration}
+    \item I tre componenti singoli ottenuti da \emph{rotationRate}
+    \item \emph{speed}
+\end{itemize}
+Siccome GeneroCity già effettuava una chiamata all'API del backend per registrare dei dati
+relativi al parcheggio che è stato appena effettuato, è stato deciso di sfruttare quest'ultima
+anche per caricare l'oggetto JSON che contiene i campioni. Così è stato creato un nuovo campo
+nel database, relativo al parcheggio e chiamato \emph{parksamples}. All'interno di questo campo
+viene salvata la stringa serializzata, ottenuta dall'oggetto JSON.
+
+\section{Pulitura e processamento dei dati} 
+
+
+
 \section{Modelli ML utilizzati} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 
