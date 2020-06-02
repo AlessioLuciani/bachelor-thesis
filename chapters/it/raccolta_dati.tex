@@ -57,7 +57,7 @@ altri veicoli circostanti, allo stile di guida o all'urgenza del guidatore, ecc\
 motivi, il dataset ottenuto non può essere considerato privo di difetti, ma si è cercato, attraverso
 queste accortezze, di ottenere una qualità dei dati migliore possibile.
 
-\subsection{Processamento}
+\subsection{Pulitura e processamento}
 
 Benchè i dati raccolti si trovassero in buono stato e strutturati in maniera adeguata per 
 essere utilizzati con lo scopo di effettuare il training per un modello ML che classificasse
@@ -172,11 +172,50 @@ anche per caricare l'oggetto JSON che contiene i campioni. Così è stato creato
 nel database, relativo al parcheggio e chiamato \emph{parksamples}. All'interno di questo campo
 viene salvata la stringa serializzata, ottenuta dall'oggetto JSON.
 
-\section{Pulitura e processamento dei dati} 
+\section{Preparazione dei dati} 
 
+Dal momento che i dati sono stati raccolti quotidianamente, il dataset delle registrazioni
+si è andato a popolare di giorno in giorno. In questo modo, è stato possibile effettuare il 
+training del modello classificatore di tanto in tanto, al fine di migliorarne le performance
+sempre di più, avendo a disposizione più registrazioni. Per automatizzare il processo di 
+preparazione dei dati, è stato creato uno script, composto da moduli, in Python. Come
+precedentemente anticipato, la funzione principale dello script è stata quella di scaricare,
+pulire e processare i dati ottenuti. Infatti, ad ogni invocazione esso
+\begin{enumerate}
+    \item richiede al database e scarica tutte le registrazioni che ancora non sono state 
+    salvate in locale;
+    \item effettua tutte le procedure di pulitura e processamento dei dati;
+    \item prepara i dati per essere utilizzati come input del classificatore e crea una 
+    struttura di file CSV, con directory classificate in base all'etichetta scelta
+    dall'utente per la registrazione;
+\end{enumerate}
+Inoltre, insieme allo script è presente un modulo che ha lo scopo di effettuare il plotting
+dei dati. Questo plotter è utilizzato per analizzare i dati in maniera visiva ed è in
+grado di mostrare i valori uscenti dai vari sensori in diverse modalità e quindi
+evidenziando diversi aspetti di essi. Ad esempio, è possibile tracciare valori provenienti
+da un componente dell'accelerazione nel tempo, sotto forma di una curva 2D, ma anche i 
+punti (formati da tutti i tre componenti) dell'accelerazione stessa, rappresentati in uno 
+spazio 3D.
 
+\section{Modelli ML utilizzati} 
 
-\section{Modelli ML utilizzati} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+Avendo i dati pronti e nel giusto formato, il passo successivo è quello di effettuare il 
+training di un modello classificatore.\\
+Per creare i modelli è stato deciso di utilizzare la libreria \emph{CreateML} di Apple.
+Questa libreria da modo di realizzare nuovi modelli di machine learning con una prospettiva
+ad alto livello, permettendo l'utilizzo anche ad utenti che non sono dotati di una conoscenza
+molto approfondita a riguardo. Essa offre anche un'interfaccia grafica che rende la creazione 
+ancora più intuitiva.\\
+Al fine di ottenere un classificatore per tipi di parcheggio, sono stati utilizzati due 
+approcci diversi, a partire da due template differenti di \emph{CreateML}:
+\begin{itemize}
+    \item una rete neurale convoluzionale, utilizzando il \emph{Motion Activity Classifier};
+    \item un tree ensemble, utilizzando il \emph{Tabular Classifier}
+\end{itemize}
+Il motivo per cui sono stati creati due modelli differenti è che il dataset che è stato 
+possibile ottenere con un numero molto limitato di utenti disponibili per la raccolta di 
+dati, non è composto da un numero di registrazioni sufficentemente grande. Per
+questa motivazione, alcuni tipi di modelli hanno ottenuto scarsi risultati nella 
+classificazione e si è preferito tentare in diversi modi.
 
 % TODO: add Simulation ...
