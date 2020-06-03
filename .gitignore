@@ -285,3 +285,7 @@ TSWLatexianTemp*
 
 # macOS
 .DS_Store
+
+.local
+.bash_history
+

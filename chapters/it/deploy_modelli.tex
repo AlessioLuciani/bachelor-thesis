@@ -1,0 +1,57 @@
+\chapter{Deploy dei modelli ML}
+
+Una volta che è stato effettuato correttamente il training e la creazione di un modello
+machine learning, arriva il momento di distribuirlo e di utilizzarlo effettivamente
+per il suo scopo, ovvero quello di classificatore di tipi di parcheggio.\\
+L'idea generale del funzionamento consiste nel raccogliere dati durante il tragitto
+dell'auto e in seguito fornirli come input al modello. Chiaramente, i dati che 
+il modello prodotto riceve in input devono essere della stessa forma di quelli
+utilizzati per fare il training. Ciò implica che tutte le procedure di pulizia
+dei dati e di miglioramento delle feature debbano essere ripetute ogni volta che
+nuovi dati vengono raccolti per essere sottoposti al modello ed essere 
+classificati.\\
+Garantire che un modello riceva in input dati di forma e qualità identiche a
+quelle del dataset di training può talvolta risultare laborioso. Ciò è causato 
+dal fatto che gli ambienti di raccolta dati e quelli di produzione possono 
+differire sotto svariati aspetti. Infatti, non è scontato che in queste due
+situazioni si utilizzino lo stesso linguaggio di programmazione, lo stesso sistema
+operativo, le stesse librerie, gli stessi approcci, ecc... Al contrario, è
+molto probabile che un modello venga istruito una volta, per poi essere 
+distribuito ed utilizzato su piattaforme diverse. In queste situazioni si può
+andare incontro a numerose complicazioni, come dover ri-progettare alcuni
+algoritmi a causa di un cambiamento di linguaggio di programmazione, che 
+renderebbe l'algoritmo stesso meno efficente o addirittura non più funzionante.
+In questo caso, è fondamentale avere una conoscenza approfondita del funzionamento
+dell'algoritmo originale e della buona documentazione da poter consultare. 
+Qualsiasi minimo errore di trascrizione o di comprensione potrebbe generare
+modifiche sostanziali ai dati che verranno processati, rendendoli così differenti
+da quelli provenienti dal training set e non più validi per una potenziale
+classificazione. Spesso si può anche andare incontro ad un cambiamento di librerie,
+soprattutto se si sta cambiando linguaggio di programmazione. La questione che
+riguarda le librerie è ancora più delicata rispetto a quella dei linguaggi. Nella
+maggior parte dei casi, esse contengono delle logiche interne che risultano molto
+complesse da riprodurre o imitare in un ambiente differente. Per questo motivo,
+è bene ridurre al minimo l'utilizzo di librerie esterne quando ci si trova in 
+situazioni come questa, ovvero scrivendo codice che dovrà essere portato su altre
+piattaforme. Tuttavia, a volte è necessario utilizzare alcune librerie, come nel
+nostro caso, in cui si sono dovute utilizzare libreria per l'algebra lineare.
+Quindi, anche per questo discorso occorre avere massima prudenza nella scelta di
+un sostituto valido e che non generi inconsistenze nei dati.
+ 
+
+\section{Necessità del calcolo in locale}
+\subsection{Predizione in locale con CoreML per sfruttare il neural engine e non appesantire
+il server...}
+\section{Porting del processore di dati}
+\section{Adattamento all'ambiente mobile (iOS)}
+\subsection{Librerie differenti...}
+
+
+
+
+
+
+
+
+
+
