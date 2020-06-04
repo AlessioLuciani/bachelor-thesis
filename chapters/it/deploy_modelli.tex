@@ -36,10 +36,36 @@ situazioni come questa, ovvero scrivendo codice che dovrà essere portato su alt
 piattaforme. Tuttavia, a volte è necessario utilizzare alcune librerie, come nel
 nostro caso, in cui si sono dovute utilizzare libreria per l'algebra lineare.
 Quindi, anche per questo discorso occorre avere massima prudenza nella scelta di
-un sostituto valido e che non generi inconsistenze nei dati.
- 
+un sostituto valido e che non generi inconsistenze nei dati.\\
+Per quanto riguarda il deploy di un modello, un'altra scelta da prendere è se 
+eseguire il modello in un applicativo lato client, oppure su un server remoto.
+Questa decisione dipende da molti fattori, tra i quali vi è la potenza di calcolo
+del dispositivo che esegue l'applicativo client, potenziali requisiti di esecuzione
+real-time (con bassa latenza), disponibilità del dispositivo di una connessione 
+ad internet, sensibilità dei dati, ecc...\\
+Entrambi gli approcci hanno vantaggi e svantaggi. Tra i vantaggi di una
+ esecuzione lato server possiamo notare: 
+\begin{itemize}
+    \item la possibilità di sostituire il modello con una versione più aggiornata
+    senza dover per forza rilasciare un nuovo aggiornamento dell'applicativo client
+    \item poter effettuare l'esecuzione di un modello al posto di un dispositivo
+   	con scarsa potenza di calcolo (es. un dispositivo embedded)
+\end{itemize}
+Invece tra quelli di una esecuzione lato client:
+\begin{itemize}
+    \item non dover dipendere da un server remoto, quindi da una connessione 
+    stabile 
+    \item evitare di dover attendere una risposta dal server, che può impiegare
+    molto più tempo che una esecuzione in locale (nel caso in cui la potenza di
+    calcolo del dispositivo sia sufficente)
+    \item mantenere privati i dati che sono utilizzati come input del modello
+    (nel caso in cui i dati siano sensibili)
+\end{itemize}
 
 \section{Necessità del calcolo in locale}
+
+Nel caso del nostro modello, è stato deciso di eseguire la predizione del modello
+in locale, nel lato client dell'app GeneroCity. Perchè ...
 \subsection{Predizione in locale con CoreML per sfruttare il neural engine e non appesantire
 il server...}
 \section{Porting del processore di dati}
