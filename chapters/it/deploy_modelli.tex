@@ -15,7 +15,7 @@ quelle del dataset di training può talvolta risultare laborioso. Ciò è causat
 dal fatto che gli ambienti di raccolta dati e quelli di produzione possono 
 differire sotto svariati aspetti. Infatti, non è scontato che in queste due
 situazioni si utilizzino lo stesso linguaggio di programmazione, lo stesso sistema
-operativo, le stesse librerie, gli stessi approcci, ecc... Al contrario, è
+operativo, le stesse librerie, gli stessi approcci, ecc. Al contrario, è
 molto probabile che un modello venga istruito una volta, per poi essere 
 distribuito ed utilizzato su piattaforme diverse. In queste situazioni si può
 andare incontro a numerose complicazioni, come dover ri-progettare alcuni
@@ -36,13 +36,16 @@ situazioni come questa, ovvero scrivendo codice che dovrà essere portato su alt
 piattaforme. Tuttavia, a volte è necessario utilizzare alcune librerie, come nel
 nostro caso, in cui si sono dovute utilizzare libreria per l'algebra lineare.
 Quindi, anche per questo discorso occorre avere massima prudenza nella scelta di
-un sostituto valido e che non generi inconsistenze nei dati.\\
+un sostituto valido e che non generi inconsistenze nei dati.
+
+\section{Necessità del calcolo in locale}
+
 Per quanto riguarda il deploy di un modello, un'altra scelta da prendere è se 
 eseguire il modello in un applicativo lato client, oppure su un server remoto.
 Questa decisione dipende da molti fattori, tra i quali vi è la potenza di calcolo
 del dispositivo che esegue l'applicativo client, potenziali requisiti di esecuzione
 real-time (con bassa latenza), disponibilità del dispositivo di una connessione 
-ad internet, sensibilità dei dati, ecc...\\
+ad internet, sensibilità dei dati, ecc.\\
 Entrambi gli approcci hanno vantaggi e svantaggi. Tra i vantaggi di una
  esecuzione lato server possiamo notare: 
 \begin{itemize}
@@ -61,13 +64,74 @@ Invece tra quelli di una esecuzione lato client:
     \item mantenere privati i dati che sono utilizzati come input del modello
     (nel caso in cui i dati siano sensibili)
 \end{itemize}
-
-\section{Necessità del calcolo in locale}
-
 Nel caso del nostro modello, è stato deciso di eseguire la predizione del modello
-in locale, nel lato client dell'app GeneroCity. Perchè ...
-\subsection{Predizione in locale con CoreML per sfruttare il neural engine e non appesantire
-il server...}
+in locale, nel lato client dell'app GeneroCity. Questa scelta è stata presa 
+principalmente per due motivi:
+\begin{itemize}
+    \item in prospettiva di un utilizzo dell'app da parte di numerosi utenti,
+    evitare che il server backend venga sottoposto a un carico troppo oneroso,
+    causato dalla potenziale esecuzione di un numero molto elevato di 
+    classificazioni in parallelo;
+    \item sfruttare il \emph{Neural Engine} dei dispositivi Apple, attraverso la 
+    libreria \emph{CoreML} (solamente per la versione iOS di GeneroCity);
+\end{itemize}
+
+Dal momento che il processo di classificazione, attraverso un modello, è 
+abbastanza intensivo e inoltre richiede la pulitura dei dati preliminare,
+permettere che venga eseguito su un server potrebbe generare rallentamenti.
+Questo si verifica soprattutto se il programma backend non è ditribuito.
+Oltre a ciò, vi è il fatto che l'esecuzione del modello avviene in seguito
+ad un'azione dell'utente (ovvero al parcheggio dell'auto) e nel caso in cui 
+ci fossero degli utenti malintenzionati, si correrebbe il rischio di
+ricevere troppe richieste allo stesso tempo.
+
+\subsection{Predizione in locale con CoreML}
+
+Dovendo effettuare la classificazione in locale, su piattaforma iOS, la 
+libreria che è risultata più adatta ai nostri scopi è stata \emph{CoreML}.
+Questa libreria da la possibilità di integrare modelli machine learning 
+direttamente all'interno delle app. Oltre a fornire dei modelli già 
+addestrati e pronti all'uso (tra cui uno per il riconoscimento di immagini,
+un altro per la trascrizione audio-testo, ecc.), essa offre dei modi per 
+utilizzare modelli creati direttamente dallo sviluppatore.\\
+Innanzitutto, \emph{CoreML} richiede che i modelli proposti dallo
+sviluppatore siano del formato proprietario ".mlmodel". Questo formato,
+infatti, è stato creato proprio da Apple. Ci sono principalmente due 
+modi per ottenere un modello di questa tipologia:
+\begin{itemize}
+    \item crearlo direttamente attraverso la libreria \emph{CreateML};
+    \item convertirne uno di un altro formato (es. TensorFlow) attraverso 
+    un apposito strumento di conversione;
+\end{itemize}
+Siccome per iniziare è stato integrato il modello soltanto nella versione
+iOS dell'app, è stata scelta la prima strada, ovvero generarlo con
+\emph{CreateML}. In questo modo non è stato necessario utilizzare
+strumenti più personalizzabili, ma molto più complessi e a basso
+livello, come TensorFlow.\\
+La scelta di \emph{CoreML} è stata ovvia, in quanto su iOS è l'unica
+libreria che permette di sfruttare al meglio l'hardware del dispositivo.
+Infatti, essa è stata progettata proprio per essere utilizzata in
+accoppiata con l'hardware GPU presente negli stessi dispositivi Apple.
+Inoltre, nei dispositivi delle generazioni più recenti è stato inserito
+un componente dedicato esclusivamente all'esecuzione di algoritmi di
+intelligenza artificiale e modelli ML, chiamato \emph{Neural Engine}.
+Esso si tratta di una sezione della GPU che è provvista di una 
+architettura ad hoc e che viene sfruttata quando vengono invocate delle
+predizioni attraverso \emph{CoreML}. Questa sezione è stata aggiunta 
+a causa di una presenza del machine learning all'interno delle app
+che è aumentata drasticamente negli ultimi anni e che con ogni
+probabilità continuerà a diffondersi. Grazie a questo componente,
+l'esecuzione di una predizione di machine learning (es. la 
+classificazione del tipo di parcheggio) non va ad influire sulle
+performance del sistema (sul resto dell'hardware) e quindi non 
+crea rallentamenti o problemi visibili dall'utente.\\
+Avendo deciso di eseguire il modello in locale, diventa obbligatorio
+effettuare anche le fasi preliminari di preparazione dei dati in 
+locale. Quindi, l'intera procedura, che va dal parcheggio 
+dell'auto fino alla predizione del tipo di parcheggio, viene
+eseguita all'interno dell'app iOS, senza alcun sostegno di 
+un servizio esterno.
+
 \section{Porting del processore di dati}
 \section{Adattamento all'ambiente mobile (iOS)}
 \subsection{Librerie differenti...}
