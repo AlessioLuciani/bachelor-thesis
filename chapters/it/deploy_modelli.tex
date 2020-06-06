@@ -130,10 +130,78 @@ effettuare anche le fasi preliminari di preparazione dei dati in
 locale. Quindi, l'intera procedura, che va dal parcheggio 
 dell'auto fino alla predizione del tipo di parcheggio, viene
 eseguita all'interno dell'app iOS, senza alcun sostegno di 
-un servizio esterno.
+servizi esterni.
 
 \section{Porting del processore di dati}
+
+Come già anticipato, la scelta di eseguire la classificazione del tipo di
+parcheggio in locale nell'applicazione implica delle conseguenze.
+Una delle più importanti tra queste è certamente il fatto di dover
+pulire e preparare i dati direttamente in ambiente iOS. Ciò
+ha reso obbligato un porting dello script dedicato a processare i
+dati delle registrazioni, che è scritto in Python. Il linguaggio di 
+destinazione del porting è Swift, ovvero il linguaggio utilizzato
+per sviluppo di GeneroCity iOS.\\
+Python e Swift differiscono sotto molti aspetti: oltre ad avere una sintassi
+significativamente diversa, sono stati progettati per scopi abbastanza 
+differenti e i loro ambienti di esecuzione non hanno molti fattori 
+in comune. Mentre Python è pensato per essere utilizzato su una vasta
+varietà di sistemi operativi e architetture, offrendo un interprete
+con ampia compatibilità, Swift ha una target più ristretto, che 
+mira principalmente ai dispositivi con sistemi operativi Apple.
+Tuttavia, la differenza maggiore sta nel fatto che Python si tratta
+di un linguaggio interpretato, mentre Swift è un linguaggio compilato. 
+Il secondo, quindi, ha bisogno di un compilatore apposito che generi
+i binari che infine vengono eseguiti.\\
+Essendo due linguaggi molto utilizzati e con un background notevole,
+entrambi sono dotati di un solida fornitura di librerie. Infatti, 
+considerando sia librerie native, che librerie di terze parti,
+Python e Swift possono essere sfruttati in moltissimi ambiti.
+Per quanto riguarda il nostro obiettivo, è stato necessario
+utilizzare operazioni di algebra lineare e fortunatamente entrambi i
+linguaggi sono muniti di librerie mature abbastanza da permettere di 
+svolgere tali operazioni in maniera sufficentemente intuitiva.\\
+Ad ogni modo, la trascrizione del codice stesso non è stata affatto
+priva di complicazioni. Sono state notate numerose differenze tra i
+linguaggi, che hanno reso il porting una operazione tutt'altro che 
+lineare:
+\begin{itemize}
+    \item strutture sintattiche: i due linguaggi differiscono alla base,
+    nel modo di gestire gli scope dei blocchi di codice (python utilizza
+    l'indentazione, mentre Swift utilizza uno stile a parentesi graffe
+    C-like) e in molte strutture, come le dichiarazioni di cicli, 
+    esecuzioni condizionali, operatori booleani, ecc.
+    \item presenza di variabili e costanti: Swift necessita che venga 
+    specificata l'entità di una variabile (se si tratta di una variabile
+    o di una costante) al momento della sua dichiarazione, mentre in Python
+    sono già tutte semplici variabili di default. Inoltre Swift permette
+    di aggiungere molte altre keyword (es. modificatori di accesso) alle
+    dichiarazioni di variabili, in modo modificare le loro proprietà.
+    \item tipizzazione: mentre Python appartiene al gruppo di linguaggi
+    tipizzati dinamicamente (ovvero, che permettono ad una stessa
+    variabile di assumere tipi diversi all'interno dello stesso scope
+    di esecuzione), Swift è tipizzato staticamente (cioè, non permette
+    che una variabile cambi il proprio tipo, nello stesso scope, durante
+    una esecuzione). Questo implica anche che in molti contesti, in Swift,
+    bisogni esplicitamente definire il tipo richiesto (ad esempio nella
+    dichiarazione dei parametri e del valore di ritorno di una funzione),
+    a differenza di Python, in cui il tipo non viene mai definito. 
+    \item strutture dati: non è immediato riportare molte strutture ad alto 
+    livello che si trovano su Python (es. la \emph{List}) su un linguaggio
+    come Swift. Spesso è necessario avere delle accortezze maggiori per 
+    gestire dei dati ad un livello leggermente più basso rispetto a come 
+    venivano gestiti su Python. % TODO: add something here and then go ahead...
+    \item passaggi di parametri di funzioni per riferimento e per valore;
+    \item gestione dei valori opzionali;
+\end{itemize}
+
+
 \section{Adattamento all'ambiente mobile (iOS)}
+
+
+
+
+
 \subsection{Librerie differenti...}
 
 
