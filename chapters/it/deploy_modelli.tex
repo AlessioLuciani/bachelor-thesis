@@ -166,18 +166,18 @@ priva di complicazioni. Sono state notate numerose differenze tra i
 linguaggi, che hanno reso il porting una operazione tutt'altro che 
 lineare:
 \begin{itemize}
-    \item strutture sintattiche: i due linguaggi differiscono alla base,
+    \item \textbf{strutture sintattiche}: i due linguaggi differiscono alla base,
     nel modo di gestire gli scope dei blocchi di codice (python utilizza
     l'indentazione, mentre Swift utilizza uno stile a parentesi graffe
     C-like) e in molte strutture, come le dichiarazioni di cicli, 
     esecuzioni condizionali, operatori booleani, ecc.
-    \item presenza di variabili e costanti: Swift necessita che venga 
+    \item \textbf{presenza di variabili e costanti}: Swift necessita che venga 
     specificata l'entità di una variabile (se si tratta di una variabile
     o di una costante) al momento della sua dichiarazione, mentre in Python
     sono già tutte semplici variabili di default. Inoltre Swift permette
     di aggiungere molte altre keyword (es. modificatori di accesso) alle
     dichiarazioni di variabili, in modo modificare le loro proprietà.
-    \item tipizzazione: mentre Python appartiene al gruppo di linguaggi
+    \item \textbf{tipizzazione}: mentre Python appartiene al gruppo di linguaggi
     tipizzati dinamicamente (ovvero, che permettono ad una stessa
     variabile di assumere tipi diversi all'interno dello stesso scope
     di esecuzione), Swift è tipizzato staticamente (cioè, non permette
@@ -186,20 +186,86 @@ lineare:
     bisogni esplicitamente definire il tipo richiesto (ad esempio nella
     dichiarazione dei parametri e del valore di ritorno di una funzione),
     a differenza di Python, in cui il tipo non viene mai definito. 
-    \item strutture dati: non è immediato riportare molte strutture ad alto 
+    \item \textbf{strutture dati}: non è immediato riportare molte strutture ad alto 
     livello che si trovano su Python (es. la \emph{List}) su un linguaggio
     come Swift. Spesso è necessario avere delle accortezze maggiori per 
     gestire dei dati ad un livello leggermente più basso rispetto a come 
-    venivano gestiti su Python. % TODO: add something here and then go ahead...
-    \item passaggi di parametri di funzioni per riferimento e per valore;
-    \item gestione dei valori opzionali;
+    venivano gestiti su Python. Inoltre, il formato JSON che nel nostro 
+    script è stato ampiamente utilizzato, viene mappato direttamente 
+    a strutture dati Python, mentre richiede delle conversioni più
+    mirate all'interno di Swift.
+    \item \textbf{passaggi di parametri a funzioni per riferimento e per valore}:
+    i due linguaggi differiscono in alcuni casi nel passaggio di parametri a 
+    funzioni. Infatti, per strutture come gli array, Python non crea copie
+    al momento del passaggio di un'istanza come parametro di una funzione.
+    Quindi, all'interno dello scope della funzione si ha accesso al 
+    riferimento della struttura iniziale e ogni modifica applicata ad
+    essa rimarrà persistente anche quando l'esecuzione della funzione sarà 
+   	terminata. Al contrario, questo tipo di strutture sono passate in 
+   	Swift come valore, ovvero, vengono create delle copie al momento della
+   	chiamata di funzione. Questo significa che tutte le azioni effettuate
+   	su una determinata struttura di questo tipo, all'interno dello scope
+   	di una funzione, non andranno a coinvolgere la copia originale che
+   	si trova nello scope chiamante.
+    \item \textbf{gestione delle variabili opzionali}: mentre Python utilizza un
+    approccio più classico a riguardo, Swift fornisce un sistema
+    abbastanza sofisticato per la gestione delle variabili opzionali,
+    al fine di tutelare il programmatore nel ridurre il numero degli errori
+    dovuti alla presenza di valori nulli all'interno delle variabili.
+    Di fatto, a causa della natura di linguaggio interpretato e della
+    tipizzazione dinamica, Python non segnala potenziali problemi scaturiti
+    da chiamate di funzioni su una variabile nulla e quindi semplicemente 
+    genera una eccezione a tempo di esecuzione. A sua differenza, Swift
+    introduce il concetto di tipo opzionale. Un tipo opzionale (sintatticamente
+    con lo stesso nome del corrispettivo tipo normale, ma seguito da "?") consiste 
+    in un tipo le cui variabili possono contenere un valore nullo. Questo implica
+    che i tipi non opzionali di Swift non possono assolutamente trattare 
+    valori nulli. Dunque, esistono alcuni operatori che vengono utilizzati
+    per assicurare che una variabile opzionale risulti effettivamente in un 
+    valore non nullo. Alcuni di questi sono: "!" che consiste in un'asserzione
+    (ovvero, garantisce che il contenuto della variabile sia non nullo, a costo 
+    di generare un'eccezione se questo non è vero), "?? default" che permette
+    di fornire un valore di default nel caso in cui la variabile contenga un 
+    valore nullo, ecc. Utilizzare "!" è stato definito come "unwrap", ovvero
+    l'azione di "scartare" metaforicamente una variabile, al fine di ottenere
+    il vero valore che è "incartato" al suo interno. Potenzialmente, si 
+    potrebbe applicare l'unwrap in ogni caso, per ottenere un comportamento 
+    simile a quello di Python, ma ciò andrebbe contro le linee guida del
+    linguaggio. \\
+    I tipi opzionali si possono incontrare spesso all'interno di Swift, come 
+    quando si utilizzano dizionari, che potrebbero avere o non avere un valore
+    corrispondente ad una chiave. Per di più, è importante saper applicarli
+    nel modo corretto. Ad esempio, la segnatura di una funzione deve 
+    necessariamente specificare se un suo argomento o il suo valore di 
+    ritorno abbia un tipo classico o opzionale.\\
+    Il controllo del rispetto di queste regole, all'interno di un programma,
+    viene fatto a tempo di compilazione.
+    
+    
 \end{itemize}
 
 
 \section{Adattamento all'ambiente mobile (iOS)}
 
+Per portare a termine il porting dello script di preparazione dei dati,
+è stato necessario compiere diversi passi. Sono state applicate una serie 
+di modifiche, tenendo conto di tutte le differenze tra i due linguaggi 
+e ambienti di programmazione che sono state descritte in precedenza.
+In situazioni particolarmente delicate, in cui il dislivello tra i due
+linguaggi impediva la trascrizione diretta, non si ha potuto far altro
+che riprogettare qualche piccola funzione, mantenendo l'opportuna 
+cautela.
 
+\subsection{Modifica della sintassi}
 
+Per prima cosa, è stato utile ricostruire il corpo dello script, ovvero 
+tutte le funzioni principali, modificando la sintassi di base. Ovvero, 
+sono stati modificati gli scope di Python basati su indentazione, in scope
+C-like, formati da parentesi graffe. % TODO: go on here...
+
+% map list of differences in previous section to actual chosen implementation
+
+% explain inout and how it works with addresses
 
 
 \subsection{Librerie differenti...}
