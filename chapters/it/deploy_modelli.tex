@@ -141,7 +141,10 @@ pulire e preparare i dati direttamente in ambiente iOS. Ciò
 ha reso obbligato un porting dello script dedicato a processare i
 dati delle registrazioni, che è scritto in Python. Il linguaggio di 
 destinazione del porting è Swift, ovvero il linguaggio utilizzato
-per sviluppo di GeneroCity iOS.\\
+per sviluppo di GeneroCity iOS.
+
+\subsection{Da Python a Swift}
+
 Python e Swift differiscono sotto molti aspetti: oltre ad avere una sintassi
 significativamente diversa, sono stati progettati per scopi abbastanza 
 differenti e i loro ambienti di esecuzione non hanno molti fattori 
@@ -241,9 +244,21 @@ lineare:
     Il controllo del rispetto di queste regole, all'interno di un programma,
     viene fatto a tempo di compilazione.
     
-    
 \end{itemize}
 
+\subsection{Corrispondenza tra le due versioni}
+
+Durante il processo di porting, è stato tenuto un occhio di riguardo per quanto
+riguarda la corrispondenza tra la versione originale dello script (in Python) e 
+quella in Swift. Ovvero, si è cercato di mantenere i due script il più simili 
+possibile, senza stravolgere completamente la struttura del programma. Oltre
+a ridurre il rischio che i comportamenti di questi due subiscano delle differenze,
+l'importanza di questa accortezza proviene dal fatto che in futuro potrebbero
+venire applicate delle modifiche alla copia originale e quindi queste si dovranno
+rispecchiare nella versione scritta in Swift. Nel caso in cui il programma venisse
+totalmente riprogettato, si perderebbe la corrispondenza tra le due versioni e 
+quindi una modifica sostanziale nella versione originale, richiederebbe un grande
+lavoro di adattamento nella versione scritta in Swift.
 
 \section{Adattamento all'ambiente mobile (iOS)}
 
@@ -259,9 +274,53 @@ cautela.
 \subsection{Modifica della sintassi}
 
 Per prima cosa, è stato utile ricostruire il corpo dello script, ovvero 
-tutte le funzioni principali, modificando la sintassi di base. Ovvero, 
+tutte le funzioni principali, modificando la sintassi di base. Sostanzialmente, 
 sono stati modificati gli scope di Python basati su indentazione, in scope
-C-like, formati da parentesi graffe. % TODO: go on here...
+C-like, formati da parentesi graffe. Inoltre, sono state modificate tutte le
+condizioni presenti nelle intestazioni dei cicli e di altri costrutti. Esempi
+sono l'operatore "and" che diventa "\&\&" e "for i in range(n)" che diventa
+"for i in 0..<n".
+
+\subsection{Dichiarazione delle variabili}
+
+Dato che nello script di partenza non appariva alcuna dichiarazione di varibile,
+ma soltanto assegnamenti, è stato necessario aggiungerle da zero, in modo da 
+adattarsi alla sintassi di Swift. Come procedimento generale, è stato deciso
+di rendere costanti (utilizzando la keyword "let") tutte le variabili che 
+che contenevano i parametri immutabili, inseriti manualmente nello script.
+Invece, è stata utilizzata la semplice keyword "var" per tutte le variabili 
+rimanenti, ad eccezione di quelle che rimanevano immutate, con le quali è 
+convenuto quindi utilizzare "let". Inoltre, dato che lo script era composto 
+da più funzioni modulari che venivano invocate da una singola funzione di
+interfaccia, è stata aggiunta la keyword "private" a tutte queste funzioni,
+al fine di rendere l'interazione con il nuovo modulo meno incline ad errori.
+
+\subsection{Aggiunta di tipi espliciti}
+
+Sempre al fine di mantenere il codice simile tra le due versioni dello script,
+si è fatto un forte utilizzo dell'inferenza di tipo fornita da Swift. Quindi,
+ove possibile non si è specificato il tipo nella dichiarazione di variabili.
+Tuttavia, è stato obbligatorio specificare il tipo in molti contesti, come
+nella segnatura delle funzioni e nella dichiarazione di variabili, senza 
+assegnazione diretta. A causa del fatto che Python non rende esplicito
+il tipo delle variabili, nel porting si è dovuto gestire caso per caso,
+facendo controlli accurati sull'entità di ogni variabile utilizzata.
+
+\subsection{Mappatura delle strutture dati}
+
+La questione delle strutture dati è stata abbastanza delicata, non tanto
+per le strutture semplici, ma per quelle più complesse, che sono 
+organizzate diversamente all'interno dei due linguaggi.\\
+In Python si può sfruttare una libreria nativa per convertire dati in 
+formato JSON direttamente in strutture del linguaggio (dizionari, liste, ecc.).
+In Swift esiste una libreria di terze parti, chiamata \emph{SwiftyJSON}, che
+ha un comportamento simile a quella di Python, ma con differenze dovute alla
+presenza dei tipi opzionali nel linguaggio. Per mantenere il codice Swift, simile
+a quello Python, è stata utilizzata \emph{SwiftyJSON} per creare una struttura a 
+dizionario "[String : [Double]]" che potesse essere utilizzata per manipolare i 
+dati JSON di una registrazione. La chiave "String" contiene il timestamp, mentre
+valore come array di "Double" è la lista dei valori ottenuti dai sensori in 
+quell'istante. % TODO: go on here
 
 % map list of differences in previous section to actual chosen implementation
 
