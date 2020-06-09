@@ -197,19 +197,20 @@ lineare:
     script è stato ampiamente utilizzato, viene mappato direttamente 
     a strutture dati Python, mentre richiede delle conversioni più
     mirate all'interno di Swift.
-    \item \textbf{passaggi di parametri a funzioni per riferimento e per valore}:
+    \item \textbf{passaggi di argomenti a funzioni per riferimento e per valore}:
     i due linguaggi differiscono in alcuni casi nel passaggio di parametri a 
     funzioni. Infatti, per strutture come gli array, Python non crea copie
-    al momento del passaggio di un'istanza come parametro di una funzione.
+    al momento del passaggio di un'istanza come argomento ad una funzione.
     Quindi, all'interno dello scope della funzione si ha accesso al 
     riferimento della struttura iniziale e ogni modifica applicata ad
     essa rimarrà persistente anche quando l'esecuzione della funzione sarà 
    	terminata. Al contrario, questo tipo di strutture sono passate in 
    	Swift come valore, ovvero, vengono create delle copie al momento della
    	chiamata di funzione. Questo significa che tutte le azioni effettuate
-   	su una determinata struttura di questo tipo, all'interno dello scope
-   	di una funzione, non andranno a coinvolgere la copia originale che
-   	si trova nello scope chiamante.
+    su una determinata struttura di questo tipo, dopo essere stata copiata, 
+    non andranno a coinvolgere la copia originale. Inoltre, di default, Swift
+    istanzia le variabili passate come argomento di funzione come "let",
+    ovvero costanti, e quindi non permette modifiche.
     \item \textbf{gestione delle variabili opzionali}: mentre Python utilizza un
     approccio più classico a riguardo, Swift fornisce un sistema
     abbastanza sofisticato per la gestione delle variabili opzionali,
@@ -318,16 +319,72 @@ ha un comportamento simile a quella di Python, ma con differenze dovute alla
 presenza dei tipi opzionali nel linguaggio. Per mantenere il codice Swift, simile
 a quello Python, è stata utilizzata \emph{SwiftyJSON} per creare una struttura a 
 dizionario "[String : [Double]]" che potesse essere utilizzata per manipolare i 
-dati JSON di una registrazione. La chiave "String" contiene il timestamp, mentre
-valore come array di "Double" è la lista dei valori ottenuti dai sensori in 
-quell'istante. % TODO: go on here
+dati JSON di una registrazione. La chiave di tipo "String" contiene il timestamp,
+mentre valore come array di "Double" è la lista dei valori ottenuti dai sensori in 
+quell'istante. 
 
-% map list of differences in previous section to actual chosen implementation
+\subsection{Adattamento del passaggio di argomenti}
 
-% explain inout and how it works with addresses
+Per quanto riguarda tutti i parametri delle funzioni che appartenevano a tipi 
+primitivi, la trascrizione è stata diretta e pressocché priva di complicazioni.
+Invece, non è stato altrettanto semplice gestire parametri di tipi più complessi,
+come i dizionari. Infatti, in questo caso è stato riscontrato il problema della
+differenza di modalità in cui vengono passati gli argomenti alle funzioni. 
+Mentre Python tratta i dizionari come una sorta di oggetto e quindi li 
+passa con un riferimento, Swift li tratta come delle struct (simili a quelle 
+esistenti in C) e al momento del passaggio genera una vera e propria copia.\\
+All'interno dello script originale, sono state apportate modifiche al dizionario
+contenente i dati della registrazione, proveniente dal formato JSON. Tutta la
+pulizia e la preparazione dei dati sono state fatte principalmente in questo
+modo. Dato che le modifiche effettuate sui dati hanno raggiunto un numero 
+abbastanza elevato, lo script Python è stato suddiviso in funzioni modulari,
+in modo da far applicare una sola modifica ad ogni funzione. Per la maggior parte
+dei casi, queste funzioni possono essere definite come procedure, in quanto operano 
+sui dati come side effect, senza restituire alcun risultato. La maniera più semplice
+e intuitiva di fare ciò è stata quella di passare il dizionario dei dati a tutte le
+funzioni. Facendo così, ogni funzione ha potuto lavorare direttamente sull'oggetto 
+e applicare modifiche allo stesso.\\
+Trasferendo questa logica su Swift direttamente, non si sarebbe ottenuto il risultato 
+desiderato. Oltre al fatto che all'interno di ogni funzione sarebbe esistita solamente 
+una copia locale del dizionario e quindi nessuna modifica sarebbe stata portata a termine 
+alla fine del processo, la differenza più proibitiva sarebbe stata che di default Swift
+istanzia le variabili provenienti dagli argomenti di una funzione come costanti,
+impedendo così la loro modifica. Quindi, una potenziale opzione
+sarebbe stata quella di restituire il dizionario modificato come valore di ritorno della 
+funzione e aggiornare la variabile nello scope chiamante, ma per mantenere consistenza 
+con lo script originale, si è scelta un'altra strada. Swift offre un modo di passare
+argomenti ad una funzione attraverso un riferimento modificabile. Questo meccanismo
+richiama un po' il passaggio di puntatori che esiste in C. In questa maniera, è 
+possibile modificare direttamente il dizionario all'interno delle funzioni, mantenendo
+il side effect come si faceva nello script in Python. Per rendere questo possibile, si
+deve specificare nella segnatura, che i parametri della funzione siano di tipo "in-out" e 
+precedere la variabile passata come argomento con il simbolo "\&", per forzare il passaggio
+per riferimento (similmente a come si farebbe in C).
 
+
+\subsection{Gestione dei tipi opzionali}
+
+Come già anticipato, Swift incentiva l'utilizzo di tipi opzionali qualora una certa 
+variabile potesse avere valore nullo. Questo avviene sempre con i dizionari, in quanto
+potrebbe accadere che ad una specifica chiave non sia associato alcun valore. Dato che
+nello script si è fatto un frequente utilizzo del dizionario contenente i dati della
+registrazione, questa questione si è presentata spesso. Nel caso di questo dizionario,
+le chiavi in questione corrispondevano ai timestamp del campionamento, quindi si 
+aveva una certezza riguardo l'esistenza delle stesse e dunque è sempre stato possibile 
+eseguire l'unwrap forzato dei valori, senza dover forinire un valore di default.
+In qualche altra situazione un po' più delicata, è convenuto invece selezionare un
+valore di default per garantire un funzionamento corretto nei casi estremi di presenza
+di valori nulli. 
 
 \subsection{Librerie differenti...}
+
+
+
+\section{Esecuzione delle predizioni}
+
+% TODO: calcolo del tipo di parcheggio attraverso il ML e caricamento nel db
+
+% maybe add heading too
 
 
 
