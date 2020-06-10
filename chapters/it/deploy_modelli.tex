@@ -409,7 +409,10 @@ matrici, effettuare dot e cross product, applicare normalizzazioni, ecc.
 Per funzioni matematiche più semplici, è stato trovato in Swift un supporto 
 diretto, a differenza di Python che ha richiesto l'uso di altre librerie.
 
-\section{Esecuzione delle predizioni}
+\section{Uso del modello nell'app}
+
+Una volta che sono stati preparati i dati, questi sono pronti per essere passati
+come input al modello, quindi viene qui descritta l'interazione con esso.
 
 \subsection{Inserimento del modello nell'app}
 
@@ -435,10 +438,56 @@ un modello chiamato "ModelloEsempio.mlmodel", verranno generate le seguenti clas
     e l'accuratezza della predizione.
 \end{itemize}
 
-% TODO: calcolo del tipo di parcheggio attraverso il ML e caricamento nel db
-% descrizione chiamata modello
+\subsection{Esecuzione delle predizioni}
 
-% maybe add heading too
+Le predizioni effettuate con il modello vengono eseguite subito dopo che l'auto viene 
+parcheggiata. Questo è possibile perchè gli unici dati che sono necessari al modello
+sono quelli raccolti durante la guida e fino al momento del parcheggio. In questo modo,
+la procedura può essere intrapresa non appena viene chiamato il metodo \emph{Car.park()}.
+Dato che all'interno di \emph{Car.park()} veniva effettuata già una chiamata a 
+\emph{ParkTypeSampleCollector} per l'interruzione della raccolta dati, si è pensato di 
+integrare la predizione direttamente nella classe del raccoglitore e lanciarla subito
+dopo la terminazione della raccolta. A questo fine, è stato definito un metodo privato
+del raccoglitore, chiamato \emph{inferType()}. Questo metodo ritorna un \emph{ParkType},
+ovvero il risultato della predizione.\\
+All'interno di \emph{inferType()}, la prima cosa che avviene è la la preparazione dei 
+dati. Questo significa che viene presa la struttura JSON con i dati appena raccolti e 
+passata all'algoritmo definito in precedenza, che effettua tutte le operazioni necessarie
+sui dati. Una volta che si hanno i dati processati, è possibile generare l'input per il 
+modello. % TODO: maybe specify structure of the input
+Vengono estratte dai dati le feature necessarie per il modello e passate come
+argomento a \emph{ParkTypeClassifierInput} (la classe di input per il modello 
+\emph{ParkTypeClassifier}). A questo punto viene istanziato un \emph{ParkTypeClassifier} 
+viene eseguita la predizione su \emph{ParkTypeClassifierInput}. Al termine, si ottiene
+un \emph{ParkTypeClassifierOutput}, dal quale si può estrarre il tipo di parcheggio 
+classificato e restituirlo come valore di ritorno del metodo.
+
+
+\subsubsection{Caricamento etichetta ML nel database}
+
+Successivamente alla predizione del tipo di parcheggio, quest'ultimo può essere salvato
+nel database. Il caricamento avviene in maniera simile a quella in cui viene salvato il 
+tipo ottenuto dalla notifica mostrata all'utente, attraverso la chiamata di una API del 
+backend di GeneroCity. Tuttavia, è stato deciso di non confondere i due tipi (quello
+selezionato dall'utente e quello ottenuto attraverso la predizione di ML), sovrascrivendo
+l'uno con l'altro, bensì di creare due campi diversi per distinguere i due concetti
+all'interno del database. Dopotutto, l'utilità del tipo selezionato dall'utente è proprio
+quella di essere utilizzato nel dataset di training per addestrare il modello e portarlo 
+al punto di essere in grado di classificare autonomamente il tipo di parcheggio stesso.
+Tra i motivi per cui si è scelto di non confondere i due valori ci sono:
+\begin{itemize}
+    \item non avrebbe più senso effettuare il training utilizzando un dataset in cui sono
+    presenti dati classificati dal modello stesso.
+    \item mantenendo i valori separati, si possono fare statistiche sul miglioramento
+    (o peggioramento) dell'accuratezza del modello, all'aumentare della dimensione del
+    dataset. Infatti, si può controllare la percentuale dei tipi classificati correttamente,
+    comparandoli alle etichette selezionate dagli utenti.
+    \item si possono fare studi sul comportamento del modello, capendo in che situazioni
+    commette più errori e quali sono invece i suoi punti più stabili.
+\end{itemize}
+% TODO: caricamento nel db
+
+% TODO: maybe add heading too
 
 
 
