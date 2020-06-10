@@ -376,13 +376,67 @@ In qualche altra situazione un po' più delicata, è convenuto invece selezionar
 valore di default per garantire un funzionamento corretto nei casi estremi di presenza
 di valori nulli. 
 
-\subsection{Librerie differenti...}
+\subsection{Sostituzione delle librerie}
 
-
+Trovandosi con Swift e su un sistema operativo mobile, l'intero ecosistema di librerie
+e funzionalità che sfruttava lo script originale, scritto in Python, non può essere
+acceduto. Questo implica una necessità di adattamento verso il nuovo ambiente. 
+Alcune librerie che venivano utilizzate dallo script originale non sono più
+necessarie, grazie a delle differenze nel comportamento dei due programmi.
+Altre, invece, sono rimaste necessarie per il corretto funzionamento dello script e 
+quindi sono state rimpiazzate da opportune librerie Swift.\\
+Dato che il programma originale doveva lavorare su tutte le registrazioni di dati 
+effettuate dagli utenti, faceva largo utilizzo del file system per leggere e scrivere 
+tutti i dati in una struttura di directory dedicata. Per questo venivano utilizzate
+delle librerie di Python per l'interazione con il file system stesso. Nel caso di 
+Swift, queste non sono state necessarie, in quanto il processo avviene soltanto 
+sui dati di una singola registrazione, e non serve quindi salvare questi su memoria
+di archiviazione. Infatti, essi vengono caricati nel database e processati in locale
+immediatamente dopo che la raccolta abbia terminato.\\
+Tra le vere e proprie azioni applicate sui dati, è capitato spesso di dover utilizzare 
+operazioni di algebra lineare, o più in generale, operazioni sofisticate sui numeri.
+Nello script Python è stata scelta la libreria esterna \emph{Numpy}, in quanto dotata
+di tutte le funzionalità da noi richieste. Degli esempi di usi che ne sono stati fatti 
+ci sono le rotazioni 3D utilizzando matrici, calcoli di prodotti tra matrici, calcoli 
+di deviazioni standard, ecc. Chiaramente queste tipologie di operazioni sono rimaste
+presenti nel programma Swift e quindi è stata fatta una ricerca di librerie sostitutive 
+che potessero rimpiazzare \emph{Numpy}. Per quanto riguarda le operazioni su vettori 
+e matrici, è stata trovata ed utilizzata la libreria \emph{SIMD}, sviluppata 
+direttamente da Apple. Questa libreria offre una vasta varietà di funzionalità
+riguardanti l'algebra lineare, infatti è stato possibile utilizzarla per definire
+matrici, effettuare dot e cross product, applicare normalizzazioni, ecc.
+% TODO: maybe add here code snippets of the use of the two libraries from Python and Swift
+Per funzioni matematiche più semplici, è stato trovato in Swift un supporto 
+diretto, a differenza di Python che ha richiesto l'uso di altre librerie.
 
 \section{Esecuzione delle predizioni}
 
+\subsection{Inserimento del modello nell'app}
+
+Per poter effettuare una predizione in locale nell'app, è chiaramente necessario che 
+il modello classificatore venga inserito nell'app stessa. Attraverso lo strumento di 
+creazione del modello, si è potuto estrarre il modello addestrato, compattato in un 
+solo file con estensione ".mlmodel". Per effettuare il deploy di questo file nell'app,
+è bastato soltanto aggiungerlo al progetto Xcode e utilizzare l'API fornita 
+appositamente da \emph{CoreML}. Infatti, una volta che si ottiene il modello in quel
+formato, esso può essere sfruttato completamente attraverso questa libreria.
+\emph{CoreML} si occupa della generazione automatica di una serie di classi che 
+permettono allo sviluppatore di interagire con il modello. In particolare, fornendo
+un modello chiamato "ModelloEsempio.mlmodel", verranno generate le seguenti classi:
+\begin{itemize}
+    \item "ModelloEsempio": classe utilizzata per l'istanziazione del modello nel
+    codice, utilizzata per avviare la predizione.
+    \item "ModelloEsempioInput": classe utilizzata per fornire l'input a "ModelloEsempio",
+    contiene un costruttore con dei parametri autogenerati, uno per ogni feature di
+    input del modello (con il relativo tipo).
+    \item "ModelloEsempioOutput":  classe utilizzata ricevere l'output di una predizione
+    di "ModelloEsempio". Contiene degli attributi autogenerati (variabili a seconda della
+    tipologia di modello), tra cui la feature di output del modello (con il relativo tipo)
+    e l'accuratezza della predizione.
+\end{itemize}
+
 % TODO: calcolo del tipo di parcheggio attraverso il ML e caricamento nel db
+% descrizione chiamata modello
 
 % maybe add heading too
 
