@@ -473,7 +473,8 @@ selezionato dall'utente e quello ottenuto attraverso la predizione di ML), sovra
 l'uno con l'altro, bensì di creare due campi diversi per distinguere i due concetti
 all'interno del database. Dopotutto, l'utilità del tipo selezionato dall'utente è proprio
 quella di essere utilizzato nel dataset di training per addestrare il modello e portarlo 
-al punto di essere in grado di classificare autonomamente il tipo di parcheggio stesso.
+al punto di essere in grado di classificare autonomamente il tipo di parcheggio stesso
+con buona accuratezza.
 Tra i motivi per cui si è scelto di non confondere i due valori ci sono:
 \begin{itemize}
     \item non avrebbe più senso effettuare il training utilizzando un dataset in cui sono
@@ -485,7 +486,6 @@ Tra i motivi per cui si è scelto di non confondere i due valori ci sono:
     \item si possono fare studi sul comportamento del modello, capendo in che situazioni
     commette più errori e quali sono invece i suoi punti più stabili.
 \end{itemize}
-% TODO: caricamento nel db
 
 % TODO: maybe add heading too
 

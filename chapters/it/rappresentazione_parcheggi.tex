@@ -1,6 +1,66 @@
 \chapter{Rappresentazione dei parcheggi sulla mappa}
+
+Tutti i procedimenti descritti in precedenza, come la raccolta dei dati, le
+operazioni che vengono effettuate su di essi, la predizione del tipo di 
+parcheggio, ecc. portano al risultato di ottenere una serie di istanze
+di parcheggio, all'interno del database, che possiedono varie informazioni.
+Ogni parcheggio, tra le altre cose, può essere fornito di:
+\begin{itemize}
+    \item \textbf{coordinate finali}
+    \item \textbf{tipo di parcheggio selezionato dall'utente}, presente per i parcheggi
+    per cui è stata selezionata manualmente una etichietta di classificazione.
+    \item \textbf{tipo di parcheggio predetto dal modello ML}, presente per i parcheggi
+    per cui è stata effettuata la predizione con il modello (a meno di eccezioni, dovrebbe
+    essere sempre presente)
+    \item \textbf{valore di heading finale}, presente per i parcheggi
+    per cui è stata effettuata la predizione con il modello (a meno di eccezioni, dovrebbe
+    essere sempre presente)
+\end{itemize}
+Queste informazioni possono essere utilizzate per fornire dei benefici all'utente.
+Di fatto, tutto il lavoro che porta a questo punto ha come scopo finale lo 
+sfruttamento delle informazioni acquisite per arricchire l'esperienza 
+dell'utente in qualche modo.\\
+In particolare, l'obiettivo principale era l'ottenimento del tipo di parcheggio, ma 
+attraverso l'intero procedimento è stato possibile ottenere anche il valore della 
+bussola senza dover fare sforzi aggiuntivi.\\
+I due utilizzi principali che per il momento vengono fatti di queste informazioni sono
+mostrare visivamente sulla mappa i tipi di parcheggio, alle rispettive coordinate, e
+migliorare l'algoritmo di creazione dei match tra utenti che lasciano un parcheggio e 
+quelli che ne cercano uno.\\
+Mostrare i parcheggi sulla mappa offre all'utente la possibilità di poter trovare 
+facilmente delle zone di posteggio in una determinata area a suo piacimento. Integrare
+nelle figure dei parcheggi anche altri dettagli, come il tipo di parcheggio o 
+l'orientamento, può ulteriormente facilitare l'esperienza dell'utente, ad esempio
+facendogli capire in anticipo com è fatto il parcheggio che sta cercando.\\
+Invece, per quanto riguarda l'algoritmo di matching, esso viene utilizzato per 
+rendere possibile uno scambio di parcheggio tra un utente che sta lasciando lo 
+stesso e un altro che ne sta cercando uno. Essendo a conoscenza dei tipi dei 
+parcheggi, al momento della ricerca di un parcheggio disponibile, da parte di un
+utente che possa prendere il posto lasciato, si potranno preferire i posti in cui
+è più probabile che l'auto di colui che cerca entri e scartare quelli in cui invece
+probabilmente l'auto non entrerà a causa delle dimensioni.\\
+Tuttavia, in sviluppi futuri, queste informazioni potranno essere sfruttate anche in
+altri ambiti, o semplicemente per migliorare in altri modi i servizi già esistenti.
+
+
 \section{Recupero dei parcheggi nella zona visualizzata} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 \section{Disegno dei parcheggi sulla mappa} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-\section{Informazione sul tipo di parcheggio} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\section{Informazione sul tipo di parcheggio} 
+
+
 \section{Informazione sull'orientamento del parcheggio} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-\section{Beneficio dell'utente} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\section{Approccio community-driven}
+
+I parcheggi vengono aggiunti automaticamente quando gli utenti li effettuano. 
+Per evitare parcheggi invalidi, si mostrano per bene quando tanti parcheggi sono stati
+fatti nello stesso posto, maggiore sicurezza ...
+
+\section{Beneficio dell'utente} 
+
+\subsection{Informazione visiva}
+
+\subsection{Disponibilità del parcheggio per auto di una certa dimensione}
+% controllare che un auto possa entrare nel parcheggio, controllando il tipo 
+% di parcheggio, se esso è parallelo e l'auto che sta arrivando è più lunga
+% di quella di colui che se ne va, essa potrebbe non entrare nel parcheggio
