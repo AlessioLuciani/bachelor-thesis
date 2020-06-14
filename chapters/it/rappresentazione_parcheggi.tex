@@ -6,7 +6,8 @@ parcheggio, ecc. portano al risultato di ottenere una serie di istanze
 di parcheggio, all'interno del database, che possiedono varie informazioni.
 Ogni parcheggio, tra le altre cose, può essere fornito di:
 \begin{itemize}
-    \item \textbf{coordinate finali}
+    \item \textbf{coordinate finali}, che indicano il punto geografico dove l'auto ha 
+    parcheggiato, sono sempre presenti (a volte potrebbero essere invalide)
     \item \textbf{tipo di parcheggio selezionato dall'utente}, presente per i parcheggi
     per cui è stata selezionata manualmente una etichietta di classificazione.
     \item \textbf{tipo di parcheggio predetto dal modello ML}, presente per i parcheggi
@@ -23,12 +24,12 @@ dell'utente in qualche modo.\\
 In particolare, l'obiettivo principale era l'ottenimento del tipo di parcheggio, ma 
 attraverso l'intero procedimento è stato possibile ottenere anche il valore della 
 bussola senza dover fare sforzi aggiuntivi.\\
-I due utilizzi principali che per il momento vengono fatti di queste informazioni sono
+I due utilizzi principali di queste informazioni che per il momento vengono fatti sono
 mostrare visivamente sulla mappa i tipi di parcheggio, alle rispettive coordinate, e
 migliorare l'algoritmo di creazione dei match tra utenti che lasciano un parcheggio e 
 quelli che ne cercano uno.\\
 Mostrare i parcheggi sulla mappa offre all'utente la possibilità di poter trovare 
-facilmente delle zone di posteggio in una determinata area a suo piacimento. Integrare
+facilmente delle zone di posteggio in un'area a proprio piacimento. Integrare
 nelle figure dei parcheggi anche altri dettagli, come il tipo di parcheggio o 
 l'orientamento, può ulteriormente facilitare l'esperienza dell'utente, ad esempio
 facendogli capire in anticipo com è fatto il parcheggio che sta cercando.
@@ -36,9 +37,9 @@ Ad ogni modo, la rappresentazione grafica che è stata implementata all'interno
 dell'app GeneroCity si tratta di una versione non definitiva, quindi poco affinata e poco
 testata sull' utente finale. Dato che l'app non è ancora stata rilasciata, questa 
 rappresentazione è utilizzata principalmente per lo sviluppo ed è destinata a subire
-grossi miglioramenti dal punto di vista grafico e dell'interfaccia. Nonostante ciò,
-la logica che la gestisce e il proprio ciclo di vita che viene giostrato dagli eventi
-dell'interfaccia utente sono sufficentemente maturi e pronti ad un potenziale rilascio.\\
+grandi miglioramenti dal punto di vista grafico e dell'interfaccia. Nonostante ciò,
+la logica che la gestisce e il proprio ciclo di vita, che viene giostrato dagli eventi
+dell'interfaccia utente, sono sufficentemente maturi e pronti ad un potenziale rilascio.\\
 Invece, per quanto riguarda l'algoritmo di matching, esso viene utilizzato per 
 rendere possibile uno scambio di parcheggio tra un utente che sta lasciando lo 
 stesso e un altro che ne sta cercando uno. Essendo a conoscenza dei tipi dei 
@@ -50,8 +51,78 @@ Tuttavia, in sviluppi futuri, queste informazioni potranno essere sfruttate anch
 altri ambiti, o semplicemente per migliorare in altri modi i servizi già esistenti.
 
 
-\section{Recupero dei parcheggi nella zona visualizzata} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-\section{Disegno dei parcheggi sulla mappa} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\section{Recupero dei parcheggi nella zona visualizzata} 
+
+Mostrare una rappresentazione grafica dei parcheggi all'utente richiede, come prima cosa,
+l'ottenimento delle informazioni necessarie su di essi. Per ogni \emph{Car} presente nel 
+sistema, vengono salvati nel database tutti i parcheggi effettuati, costituiti dalle 
+informazioni descritte in precedenza, ed altre, tra cui il timestamp del caricamento.\\
+Occorre quindi un metodo per scaricare le informazioni riguardanti i parcheggi che 
+devono essere rappresentati sulla mappa. In particolare, quando l'utente osserva una
+specifica porzione della mappa, ha bisogno di vedere tutti i parcheggi che si trovano 
+in quella determinata zona e nessun altro. Questo ha permesso una progettazione che 
+minimizzasse la quantità di richieste inviate all'API backend e allo stesso tempo 
+mostrasse visivamente tutti i parcheggi in maniera fluida e senza provocare
+interruzioni all'esperienza utente. Chiaramente, l'area inquadrata nella mappa 
+cambia molto frequentemente e a seconda di come l'utente interagisce con essa. 
+Quindi, l'algoritmo di recupero dei parcheggi deve tenere conto anche di questo fatto
+ed impedire che vengano invocate un numero eccessivo di chiamate verso il server.\\
+Dunque, è stato necessario introdurre una nuova funzione fornita dall'API del backend
+di GeneroCity, che permettesse di scaricare le istanze dei parcheggi in maniera
+intelligente. Successivamente, è stato progettato un algoritmo che potesse sfruttare
+al meglio la nuova funzione introdotta e quindi scaricare le informazioni sui parcheggi,
+tenendo conto di tutti i vincoli presenti e le necessità dell'utente finale.
+
+\subsection{Chiamata API per la richiesta dei parcheggi in un'area}
+
+In GeneroCity iOS sono state utilizzate le mappe di Apple, che vengono distribuite
+attraverso la libreria \emph{MapKit}. La classe responsabile della rappresentazione
+grafica di una mappa è \emph{MKMapView}. Quest'ultima possiede un attributo \textbf{region}
+che corrisponde all'informazione sull'area mostrata sullo schermo nell'istante corrente.
+Infatti, quando l'area visibile sul display cambia (ad esempio in seguito ad uno swipe
+dell'utente), anche la \textbf{region} viene aggiornata. Questo oggetto è formato dalle
+coordinate del centro dell'area interessata e da due valori che rappresentano lo 
+scostamento di longitudine e quello di latitudine. Gli scostamenti indicano rispettivamente gli
+angoli, espressi in gradi, tra la longitudine minore e quella maggiore e la latitudine 
+minore e quella maggiore visibili attualmente sullo schermo. In questo modo, si è a conoscenza della porzione esatta di mappa visibile dall'utente
+in ogni istante.\\
+Si può utilizzare questa informazione per ottenere le istanze dei parcheggi che si trovano 
+nel database e che sono stati registrati all'interno dell'area richiesta.
+Dati i parametri \textbf{lat} (latitudine del centro dell'area), \textbf{lon} 
+(longitudine del centro dell'area), \textbf{deltaLat} (scostamento di latitudine), 
+\textbf{deltaLon} (scostamento di longitudine), l'interrogazione
+al database consiste semplicemente nella selezione dei parcheggi \textbf{p}, relativi
+a qualsiasi auto, tali che:
+\begin{center}
+    $ \textbf{lat} - \textbf{deltaLat} \le \textbf{p.latitude} \le \textbf{lat} + \textbf{deltaLat}$\\
+    e\\
+    $ \textbf{lon} - \textbf{deltaLon} \le \textbf{p.longitude} \le \textbf{lon} + \textbf{deltaLon}$
+\end{center}
+Questa interrogazione è stata inserita all'interno di una nuova chiamata API, di tipo "GET".
+Questa chiamata è stata definita "Get area park list", in quanto restituisce la lista di 
+parcheggi presenti all'interno dell'area indicata.\\
+I parametri accettati dalla chiamata sono tutti e soli quelli appena definiti,
+tutti di tipo float. Inoltre, tutti i parametri sono obbligatori, in quanto 
+sono tutti essenziali per il corretto calcolo del risultato.\\
+La risposta fornita da questa chiamata consiste in una lista di oggetti in formato JSON, 
+contenenti le informazioni dei singoli parcheggi trovati. Ogni oggetto di un parcheggio
+contiene: le coordinate, il timestamp, le etichette del tipo di parcheggio (sia quella 
+selezionata dall'utente che quella predetta dal modello classificatore), l'heading, ecc.
+Qualora nel database alcuni di questi campi non fossero obbligatori, i rispettivi valori 
+restituiti potrebbero essere nulli.
+
+
+
+quali dati vengono ritornati...
+
+
+
+\subsection{query da locale...}
+
+\section{Disegno dei parcheggi sulla mappa} 
+
+% TODO: also add toggle description
+
 \section{Informazione sul tipo di parcheggio} 
 
 
@@ -59,9 +130,12 @@ altri ambiti, o semplicemente per migliorare in altri modi i servizi già esiste
 
 \section{Approccio community-driven}
 
+% TODO: discuss this 
 I parcheggi vengono aggiunti automaticamente quando gli utenti li effettuano. 
 Per evitare parcheggi invalidi, si mostrano per bene quando tanti parcheggi sono stati
 fatti nello stesso posto, maggiore sicurezza ...
+In questo modo l'utente ha l'informazione su dove si trova una zona di posteggio, tutto
+attraverso l'automatismo dell'app, non c'è bisogno che esse vengano impostate dagli sviluppatori
 
 \section{Beneficio dell'utente} 
 
