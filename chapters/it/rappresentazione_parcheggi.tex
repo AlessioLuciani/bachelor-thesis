@@ -109,15 +109,66 @@ contenenti le informazioni dei singoli parcheggi trovati. Ogni oggetto di un par
 contiene: le coordinate, il timestamp, le etichette del tipo di parcheggio (sia quella 
 selezionata dall'utente che quella predetta dal modello classificatore), l'heading, ecc.
 Qualora nel database alcuni di questi campi non fossero obbligatori, i rispettivi valori 
-restituiti potrebbero essere nulli.
+restituiti potrebbero essere nulli.\\
+All'interno del modulo API dell'app Generocity iOS è stata quindi aggiunta una una funzione
+di interfaccia, in grado di effettuare una chiamata alla funzionalità backend appena descritta.
+% TODO: maybe add a picture of the architecture for the call (frontend > backend > DB -<)
+Tra i vari parametri della funzione è presente una callback, che viene eseguita nel momento in cui
+viene ricevuta la risposta dal server. Questa callback contiene un oggetto JSON, che è esattamente
+la lista delle istanze dei parcheggi trovati. In questo modo, è possibile ottenere la lista desiderata in maniera asincrona, direttamente con una chiamata a funzione. 
 
+\subsection{Scheduling delle richieste}
 
+Come è stato anticipato, i parcheggi che devono essere mostrati sulla mappa devono essere 
+scaricati con un criterio che tenga conto di diversi vincoli. Al centro di tutto vi è
+l'esperienza dell'utente. Infatti, si è cercato di progettare un algoritmo di recupero dei 
+parcheggi che permettesse di mostrare immediatamente, o comunque con poco ritardo, le 
+istanze sulla mappa. Inoltre, si è tentato di far mantenere questa proprietà anche in seguito
+ad un potenziale cambiamento della regione di mappa visibile sullo schermo, causato da uno
+swipe dell'utente stesso, o da qualsiasi evento all'interno dell'app. Questo può essere
+classificato come un requisito funzionale. Di contro, possono essere individuati diversi
+requisiti non funzionali che pongono dei vincoli e delle limitazioni che devono essere 
+rispettati per garantire la fattibilità di questa funzionalità:
+\begin{itemize}
+    \item \textbf{richiesta della sola area visibile}: al crescere del numero di parcheggi 
+    salvati nel database, aumenta la densità dei parcheggi in una data zona e quindi 
+    aumenta il numero di potenziali istanze da scaricare. Al fine di contenere le 
+    dimensioni del payload delle risposte ricevute dal server, conviene ridurre il più
+    possibile la grandezza della zona richiesta, idealmente soltanto l'area circostante
+    la \textbf{region} attualmente visibile. Questo meccanismo non sarà comunque 
+    sufficiente per quando il numero dei parcheggi presenti nel database diverrà
+    molto grande. Con sviluppi futuri dell'app si potrà risolvere il problema, ad 
+    esempio richiedendo solo i parcheggi registrati in un certo intervallo di tempo,
+    oppure ponendo un limite alla lunghezza della lista in risposta.
+    \item \textbf{intervallo di tempo tra due richieste all'API}: la regione della mappa
+    visualizzata sullo schermo può cambiare molte volte e molto rapidamente. Questo fatto
+    potrebbe creare problemi se implicasse un invio non controllato di richieste. Infatti,
+    dato che l'evento di cambiamento della \textbf{region} della mappa viene lanciato per 
+    ogni piccola variazione, l'effettuare una nuova richiesta ogni volta potrebbe 
+    generare decine di chiamate al secondo. Questa cosa sarebbe chiaramente inutile e 
+    deleteria, perché il server verrebbe inondato di richieste che oltretutto 
+    richiederebbero una lista quasi uguale di parcheggi. Anche nel lato client questo 
+    sarebbe dannoso, dovendo gestire un traffico troppo elevato di richieste e risposte
+    HTTP. Viene naturale pensare quindi che sia necessario un limite sul numero di 
+    richieste effettuabili in un certo intervallo di tempo.
+    \item \textbf{richieste di aree molto grandi}: la mappa offre la possibilità di 
+    modificare lo zoom della visuale, così da ingrandire e rimpicciolire l'area 
+    visibile sullo schermo. Quando viene applicato uno zoom molto basso e quindi 
+    l'area visibile si ingrandisce in maniera considerevole, le zone di posteggio
+    diventano troppo piccole e invisibili all'utente. Questo significa che quando
+    la \textbf{region} della mappa è molto grande, non ha senso mostrare la 
+    rappresentazione dei parcheggi. Inoltre, richiedere la lista dei parcheggi
+    registrati in una grande zona porterebbe al problema già discusso di una
+    quantità di istanze trovate troppo grande. Questo farebbe sorgere dei 
+    problemi relativi anche alla quantità elevata di memoria occupata nel
+    sistema operativo per l'applicazione.
+    \item \textbf{richieste della stessa area}: quando la \textbf{region} della mappa
+    cambia di un piccolo delta, la maggior parte dei parcheggi richiesti sarebbero
+    gli stessi che erano stati ottenuti alla richiesta precedente. Quindi, si possono
+    evitare richieste duplicate per la stessa zona e occorre un metodo per evitare 
+    di inviare richieste inutili.
+\end{itemize}
 
-quali dati vengono ritornati...
-
-
-
-\subsection{query da locale...}
 
 \section{Disegno dei parcheggi sulla mappa} 
 
