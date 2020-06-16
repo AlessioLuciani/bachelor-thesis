@@ -168,7 +168,28 @@ rispettati per garantire la fattibilità di questa funzionalità:
     evitare richieste duplicate per la stessa zona e occorre un metodo per evitare 
     di inviare richieste inutili.
 \end{itemize}
-
+Con lo scopo di soddisfare tutti questi requisiti, è stato progettato un algoritmo di 
+scaricamento dei parcheggi che effettua diversi controlli prima di procedere con una 
+nuova richiesta. \'E stata così definita una classe \emph{ParkingOverlaysLoader}, 
+responsabile dell'esecuzione delle richieste all'API. Un'istanza di questa classe
+viene gestita dalla mappa. In particolare, vengono sfruttati degli eventi generati
+dalla mappa per chiamare il metodo \emph{load()} di \emph{ParkingOverlaysLoader} e
+quindi effettuare una nuova richiesta, se questa viene permessa.\\
+Come già annunciato, la mappa genera un evento ogni volta che la \textbf{region} è 
+soggetta ad un piccolo cambiamento. Questo evento può essere catturato attraverso
+il metodo \emph{mapViewDidChangeVisibleRegion()}, offerto dal delegate della mappa
+stessa. In questo modo, si può effettuare una chiamata al metodo \emph{load()} e
+lasciar gestire al \emph{ParkingOverlaysLoader} la scelta di compiere o no una
+nuova richiesta.\\
+Dopo la prima chiamata, che genera sempre una richiesta all'API, entreranno in regime
+una serie di condizioni che ogni volta controlleranno se sia il caso di procedere con
+una nuova richiesta. Definendo \textbf{MIN\_TIME\_BETWEEN\_QUERIES} come il tempo minimo
+che deve passare tra una richiesta e la successiva e \textbf{MAX\_REGION\_DELTA} come 
+il massimo scostamento (angolo in gradi) tra i due estremi visibili della mappa per 
+cui abbia senso effettuare una richiesta, vengono controllate le seguenti condizioni:
+\begin{center}
+    $ \textbf{mapView.region.span.latitudeDelta} > \textbf{MAX\_REGION\_DELTA} $
+\end{center}
 
 \section{Disegno dei parcheggi sulla mappa} 
 
