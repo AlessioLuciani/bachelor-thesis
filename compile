@@ -1,2 +1,2 @@
 #! /bin/bash
-pdflatex -interaction=nonstopmode main_it.tex 
+pdflatex -interaction=nonstopmode thesis.tex 
