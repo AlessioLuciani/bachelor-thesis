@@ -183,15 +183,67 @@ lasciar gestire al \emph{ParkingOverlaysLoader} la scelta di compiere o no una
 nuova richiesta.\\
 Dopo la prima chiamata, che genera sempre una richiesta all'API, entreranno in regime
 una serie di condizioni che ogni volta controlleranno se sia il caso di procedere con
-una nuova richiesta. Definendo \textbf{MIN\_TIME\_BETWEEN\_QUERIES} come il tempo minimo
+una nuova richiesta. Sono utilizzate delle variabili che mantengono lo stato del 
+\emph{ParkingOverlaysLoader}: \textbf{lastQueryTimestamp} in cui viene salvato 
+l'istante dell'ultima richiesta e \textbf{lastQueryRegion} in cui viene invece 
+ricordata l'area per cui è stata fatta l'ultima richiesta. Definendo 
+\textbf{MIN\_TIME\_BETWEEN\_QUERIES} come il tempo minimo
 che deve passare tra una richiesta e la successiva e \textbf{MAX\_REGION\_DELTA} come 
 il massimo scostamento (angolo in gradi) tra i due estremi visibili della mappa per 
 cui abbia senso effettuare una richiesta, vengono controllate le seguenti condizioni:
 \begin{center}
     $ \textbf{mapView.region.span.latitudeDelta} > \textbf{MAX\_REGION\_DELTA} $
 \end{center}
+controlla che la visuale attuale abbia una \textbf{region} più grande della massima
+permessa. Quindi il numero dei potenziali parcheggi presenti sarebbe troppo elevato.
+\begin{center}
+    $ \textbf{Date().timeIntervalSince1970} - \textbf{self.lastQueryTimestamp} < 
+    \textbf{MIN\_TIME\_BETWEEN\_QUERIES} $
+\end{center} 
+controlla che il tempo trascorso dall'ultima richiesta al momento attuale sia minore 
+del limite minimo predisposto. In questo caso si invierebbe una richiesta dopo troppo
+poco tempo rispetto alla precedente.
+\begin{center}
+    $ abs(\textbf{mapView.region.center.latitude} - \textbf{lastQueryRegion.center.latitude}) < \textbf{lastQueryRegion.span.latitudeDelta}/2 $\\
+    e\\
+    $ abs(\textbf{mapView.region.center.longitude} - \textbf{lastQueryRegion.center.longitude}) < \textbf{lastQueryRegion.span.longitudeDelta}/2 $\\
+    e\\
+    $ \textbf{mapView.region.span.latitudeDelta} < \textbf{lastQueryRegion.span.latitudeDelta} * 1.5) $
+\end{center} 
+controlla che la zona attualmente visualizzata sulla mappa non sia cambiata abbastanza
+rispetto a quella dell'ultima richiesta. Come descritto più avanti, la richiesta
+viene effettuata per una zona leggermente più grande di quella visibile, e così, 
+quando la visuale si muove di un piccolo delta, i parcheggi caricati in precedenza
+riescono ancora a coprire l'intera area visibile. In questo caso, non è necessario
+scaricare i parcheggi nuovamente. Da notare che la zona inquadrata sulla mappa può
+variare anche venendo rimpicciolita o ingrandita, e non solo venendo traslata. Quindi,
+può accadere che l'utente rimpicciolisca la mappa e quindi esca fuori dalla zona coperta
+dall'ultimo scaricamento. La terza condizione in "and" logico controlla che questo
+non accada.\\
+
+Se almeno una di queste macro-condizioni è soddisfatta, la richiesta all'API viene 
+interrotta, altrimenti vengono aggiornate le variabili con i dati attuali e si prosegue.\\
+Quindi viene effettivamente chiamata la funzione collegata all'API (definita in precedenza)
+e inviata la richiesta. I parametri \textbf{deltaLat} e \textbf{deltaLon} vengono presi 
+il doppio dello scostamento che dal centro della mappa va fino al bordo della porzione
+di area visibile. In questo modo, il server risponderà con una lista di parcheggi che 
+include anche le istanze che si trovano nelle estreme vicinanze dell'area visibile.
 
 \section{Disegno dei parcheggi sulla mappa} 
+
+Una volta che è stata definita la dinamica per lo scaricamento delle istanze di 
+parcheggio, c'è bisogno di un modo per salvare queste in locale e successivamente 
+mostrarle visivamente sulla mappa.\\
+Per impedire che lo scaricamento dei parcheggi vada a occupare troppa memoria 
+all'interno dell'app, si è deciso di eliminare le istanze scaricate con una 
+richiesta precedente, non appena arrivi il risultato di una nuova. Inoltre, 
+così facendo, non si va ad applicare caching a particolari zone della mappa
+e così, nel caso in cui vengano registrati nuovi parcheggi nel database, questi 
+verranno scaricati non appena l'utente visualizzerà la zona interessata.\\
+La maniera che fornisce \emph{MapKit} di disegnare delle forme sulla mappa è 
+attraverso gli \emph{MKOverlay}. Infatti, attraverso questi oggetti, è possibile
+rappresentare forme di svariate tipologie, applicando colori, trasparenze e altro.
+
 
 % TODO: also add toggle description
 
