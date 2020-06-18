@@ -243,14 +243,93 @@ verranno scaricati non appena l'utente visualizzerà la zona interessata.\\
 La maniera che fornisce \emph{MapKit} di disegnare delle forme sulla mappa è 
 attraverso gli \emph{MKOverlay}. Infatti, attraverso questi oggetti, è possibile
 rappresentare forme di svariate tipologie, applicando colori, trasparenze e altro.
+La lista degli overlay viene salvata come attributo della mappa e così 
+è utilizzata per renderizzare tutte le forme sullo schermo, quando è necessario.\\
+Per distinguere gli overlay relativi ai parcheggi da tutti gli altri, gli 
+viene impostato il titolo a "parking", in modo da poter effettuare alcune operazioni 
+esclusivamente su di essi. Ogni volta che viene ricevuta una nuova risposta dall'API, 
+vengono eliminati tutti gli overlay dei parcheggi e poi ne vengono creati 
+di nuovi, partendo dalle informazioni ricevute dal server. In particolare, viene 
+impostato il centro dell'overlay alle coordinate del rispettivo parcheggio.\\
+Dato che esistono overlay di forme diverse e personalizzabili, si è pensato di 
+sfruttarli per rappresentare diverse informazioni riguardanti i parcheggi.
 
+\subsection{Informazione sul tipo di parcheggio} 
 
-% TODO: also add toggle description
+Oltre alla presenza stessa di un parcheggio in un determinato punto, l'informazione
+principale che si vuole rappresentare è quella del tipo del parcheggio stesso.
+Per questo, al momento della creazione dell'overlay vengono salvate in esso 
+entrambe le etichette del tipo selezionato dall'utente e di quello predetto
+dal modello ML.\\
+Sono state predisposte due diverse modalità di visualizzazione, sfruttando le 
+forme del cerchio e del rettangolo. La prima è utilizzata per mostrare la 
+presenza di un certa zona di parcheggio e il proprio tipo, mentre la seconda
+rappresenta anche l'orientamento delle singole istanze, rispetto al nord geografico.\\
+In forma non definitiva, è stato associato un colore primario ad ogni tipo di 
+parcheggio e quindi questo verrà visualizzato dall'utente sulla mappa. Inoltre,
+si fa uso di un'alto livello di trasparenza in ogni overlay, in modo da far 
+rafforzare la presenza di un colore, rispetto ad un altro, all'aumentare delle
+istanze di parcheggio che coinvolgono le stesse coordinate (o coordinate molto
+vicine). Così facendo, la presenza di un colore forte implica una grande 
+accuratezza per un certo tipo di parcheggio (essendoci molte istanze dello stesso
+tipo che si sovrappongono). Inoltre, le istanze di parcheggio molto vicine le une alle
+altre vanno a colorare una intera zona in maniera abbastanza omogenea, e così mostrano
+la presenza di un'intera area di posteggio.\\
+% TODO: add screenshot with circles
+Tuttavia, questo modo di rappresentare 
+l'informazione non è risultato molto intuitivo per l'utente e quindi sarà utilizzato 
+a scopo di sviluppo, mentre per il rilascio effettivo dell'applicazione verrà predisposta
+una rappresentazione differente.
 
-\section{Informazione sul tipo di parcheggio} 
+\subsection{Informazione sull'orientamento del parcheggio} 
 
+Per quanto riguarda l'informazione sull'orientamento, si è pensato di riprodurre 
+sulla mappa una forma simile a quella del rettangolo del parcheggio vero e 
+proprio. Ovvero, si è provato a posizionare un overlay rettangolare alle coordinate
+del parcheggio, orientato rispetto all'angolo ottenuto dal valore dell'heading. 
+\'E stato utilizzato un overlay poligonale, aggiungendo manualmente le coordinate
+relative agli angoli del rettangolo. Inizialmente sono stati definiti due coefficienti 
+di scostamento \textbf{ALPHA} e \textbf{BETA} per la formazione del rettangolo orientato 
+verso il nord geografico. Così è stata creata la lista \textbf{points} di coordinate degli
+angoli del rettangolo, relative all'origine. 
+\begin{center}
+    $ \textbf{points} = [[\textbf{BETA}, \textbf{ALPHA}],$\\
+        $[\textbf{BETA}, -\textbf{ALPHA}],$\\
+        $[-\textbf{BETA}, -\textbf{ALPHA}],$\\
+        $[-\textbf{BETA}, \textbf{ALPHA}]] $
+\end{center}
+Successivamente, sono state moltiplicate le coordinate di base per la matrice \textbf{M} 
+di rotazione 2D, in modo da ruotare il rettangolo iniziale ed ottenere 
+l'orientamento desiderato. L'angolo $\theta$ di rotazione corrisponde al valore dell'heading, al negativo (la 
+rotazione deve essere applicata nel senso opposto), convertito in radianti. 
+\begin{center}
+    $\textbf{M} = \begin{bmatrix}
+        \cos{\theta} & -\sin{\theta}\\
+        \sin{\theta} & cos{\theta}
+    \end{bmatrix}$
+\end{center}
+Infine è stato applicata una traslazione, date le coordinate del parcheggio.
+\begin{center}
+    $CLLocationCoordinate2D($\\
+    $latitude: \textbf{center.latitude} + $ \\
+    $(\textbf{point}[0] * sin(\textbf{angle})) + (\textbf{point}[1] * cos(\textbf{angle})),$\\
+    $longitude: \textbf{center.longitude} + $ \\
+    $(\textbf{point}[0] * cos(\textbf{angle})) - (\textbf{point}[1] * sin(\textbf{angle})))$
+\end{center}
+% TODO: add screenshot with rectangles
+Questa funzione si trova in stadio sperimentale, in quanto l'accuratezza del valore
+dell'heading non è abbastanza elevata per rappresentare un orientamento realistico, 
+bensì in diversi casi può accadere che il parcheggio venga orientato diversamente 
+da come è in realtà. Inoltre, in questo caso, non è possibile sovrapporre diversi
+parcheggi, perchè altrimenti si genererebbero delle forme prive di senso. In uno 
+sviluppo futuro, si potrebbero fare più controlli sul salvataggio di parcheggi nel
+database, magari cercando di capire quali istanze appartengono allo stesso posteggio
+reale e quindi anche ottenere dati più accurati, combinando quelli provenienti da 
+diverse istanze di uno stesso parcheggio.
 
-\section{Informazione sull'orientamento del parcheggio} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\subsection{Rendering dei parcheggi}
+
+% TODO: add toggle description
 
 \section{Approccio community-driven}
 
@@ -264,6 +343,8 @@ attraverso l'automatismo dell'app, non c'è bisogno che esse vengano impostate d
 \section{Beneficio dell'utente} 
 
 \subsection{Informazione visiva}
+
+sapere dove stanno dei parcheggi
 
 \subsection{Disponibilità del parcheggio per auto di una certa dimensione}
 % controllare che un auto possa entrare nel parcheggio, controllando il tipo 
