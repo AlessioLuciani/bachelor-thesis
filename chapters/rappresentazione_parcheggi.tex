@@ -329,16 +329,42 @@ diverse istanze di uno stesso parcheggio.
 
 \subsection{Rendering dei parcheggi}
 
-% TODO: add toggle description
+Quando degli overlay vengono aggiunti alla mappa, questi sono pronti per essere
+renderizzati sullo schermo, ma è necessario che vengano specificate delle informazioni
+per impostare le proprietà grafiche delle varie tipologie. Per fare questo, il delegate
+della mappa offre un metodo che viene chiamato appena prima che avvenga il rendering
+di un overlay. Tra i parametri vi è l'\emph{MKOverlay} stesso e il tipo di ritorno
+è \emph{MKOverlayRenderer}, ovvero l'oggetto utilizzato dalla mappa per effettuare 
+il rendering. All'interno di questo metodo vengono fatti i controlli per la selezione
+della forma e dei colori dell'overlay. Infatti, come prima cosa si controlla il titolo
+dell'overlay e se è uguale a "parking", si procede con le seguenti operazioni. Avviene
+la differenziazione tra l'uso del \emph{MKCircle} e quello del \emph{MKPolygon}, per 
+rappresentare il cerchio o il rettangolo del parcheggio. Infine, viene impostato
+il colore dell'overlay in base al tipo di parcheggio specificato in esso.\\
+Per permettere all'utente di disattivare la visualizzazione delle figure dei parcheggi
+sulla mappa, è stata aggiunta una impostazione che viene modificata grazie ad uno switch.
+Quando lo switch viene disattivato, tutti gli overlay dei parcheggi vengono eliminati 
+dalla mappa e vengono interrotte le richieste all'API. Dato che la mappa si aggiorna 
+automaticamente quando degli overlay vengono aggiunti o rimossi, tutte le figure 
+dei parcheggi spariscono dallo schermo. Quando invece lo switch viene riattivato,
+viene forzata una nuova richiesta all'API e vengono renderizzati nuovamente i parcheggi
+presenti nella porzione di mappa visualizzata.
 
 \section{Approccio community-driven}
 
-% TODO: discuss this 
-I parcheggi vengono aggiunti automaticamente quando gli utenti li effettuano. 
-Per evitare parcheggi invalidi, si mostrano per bene quando tanti parcheggi sono stati
-fatti nello stesso posto, maggiore sicurezza ...
-In questo modo l'utente ha l'informazione su dove si trova una zona di posteggio, tutto
-attraverso l'automatismo dell'app, non c'è bisogno che esse vengano impostate dagli sviluppatori
+Come già discusso, l'approccio utilizzato per l'ottenimento delle istanze di parcheggio
+fa leva sull'interazione implicita dell'utente. Tutti i parcheggi caricati nel database
+provengono da manovre di parcheggio reali e non sono stati inseriti manualmente dagli
+sviluppatori. In questo modo, tenendo conto dei dovuti controlli di autenticità che 
+dovranno essere applicati, si andranno a popolare di parcheggi tutte le zone in cui 
+viene utilizzata l'app. Di conseguenza, diventerà sempre più accurata l'informazione
+sulla presenza di una determinata zona di posteggio in una specifica area. Questo 
+approccio è quindi di natura molto scalabile e può essere sfruttato, con le dovute
+accortezze, per facilitare un graduale incremento di utenza in diverse città e 
+località.
+
+% TODO: maybe add some reference about this community-driven technique 
+
 
 \section{Beneficio dell'utente} 
 

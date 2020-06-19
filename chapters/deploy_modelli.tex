@@ -460,8 +460,17 @@ argomento a \emph{ParkTypeClassifierInput} (la classe di input per il modello
 \emph{ParkTypeClassifier}). A questo punto viene istanziato un \emph{ParkTypeClassifier} 
 viene eseguita la predizione su \emph{ParkTypeClassifierInput}. Al termine, si ottiene
 un \emph{ParkTypeClassifierOutput}, dal quale si può estrarre il tipo di parcheggio 
-classificato e restituirlo come valore di ritorno del metodo.
-
+classificato e restituirlo come valore di ritorno del metodo.\\
+Come side effect della predizione, viene calcolato anche il presunto orientamento
+dell'auto rispetto al nord geografico. Infatti, il valore dell'heading ottenuto 
+dallo smartphone è relativo allo smartphone stesso, e non alla macchina. Questo 
+può creare dei problemi, dato che lo smartphone non è quasi mai orientato nella 
+stessa direzione della macchina. Per ottenere l'orientamento reale dell'auto,
+occorre l'angolo di differenza che c'è tra i due oggetti. Tra i vari procedimenti 
+applicati ai dati, vi è uno che predice questo angolo, attraverso un modello 
+ML regressore, per applicare una rotazione 3D dei valori. Quindi, l'angolo ottenuto
+può essere utilizzato anche per calcolare il probabile (ma non certo) orientamento
+dell'auto.
 
 \subsubsection{Caricamento etichetta ML nel database}
 
@@ -486,8 +495,8 @@ Tra i motivi per cui si è scelto di non confondere i due valori ci sono:
     \item si possono fare studi sul comportamento del modello, capendo in che situazioni
     commette più errori e quali sono invece i suoi punti più stabili.
 \end{itemize}
-
-% TODO: maybe add heading too
+Oltre all'etichetta, viene caricato nel database anche il valore dell'heading 
+precedentemente calcolato.
 
 
 
