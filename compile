@@ -1,2 +1,3 @@
 #! /bin/bash
+bibtex thesis
 pdflatex -interaction=nonstopmode thesis.tex 
