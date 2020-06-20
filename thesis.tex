@@ -1,22 +1,17 @@
 % !TeX encoding = UTF-8
 % !TeX program = pdflatex
 % !TeX spellcheck = it_IT
-\documentclass[binding=0.6cm,TFA]{sapthesis}
+\documentclass[binding=0.6cm,Lau,noexaminfo]{sapthesis}
 \usepackage{microtype} \usepackage[italian]{babel}
 \usepackage[utf8]{inputenc} \usepackage{hyperref}
-\usepackage[T1]{fontenc}
 \usepackage{import}
-\usepackage{amsmath}
-\hypersetup{pdftitle={La mia tesi},pdfauthor={Alessio Luciani}}
+\hypersetup{pdftitle={Classificazione dei tipi di parcheggio su app mobile},pdfauthor={Alessio Luciani}}
 \title{Classificazione dei tipi di parcheggio su app mobile} \author{Alessio Luciani}
 \IDnumber{1797637}
-\course{Corso di laurea in Informatica}
+\course{Informatica}
 \courseorganizer{Facoltà di Ingegneria dell'Informazione, Informatica e Statistica} \AcademicYear{2019/2020}
 \copyyear{2020} \advisor{Emanuele Panizzi}
-\tutor{}\tutorcoord{}
 \authoremail{alessio99.luciani@gmail.com}
-\schoolname{Università degli Studi di Roma "La Sapienza"} \schooladdress{Piazzale Aldo Moro 5, 00185 Roma}
-\schoolwebsite{https://www.sapienzaapps.it/} 
 \begin{document}
 \frontmatter
 \maketitle
@@ -36,5 +31,7 @@
 \addcontentsline{toc}{chapter}{\bibname}
 % Here put the code for the bibliography. You can use BibTeX or
 % the BibLaTeX package or the simple environment thebibliography.
-%\input{references.bib}
+\bibliographystyle{ieeetr}
+\bibliography{bibliography}
 \end{document}
+
