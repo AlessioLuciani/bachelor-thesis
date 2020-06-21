@@ -365,14 +365,37 @@ località.
 
 % TODO: maybe add some reference about this community-driven technique 
 
-
 \section{Beneficio dell'utente} 
+
+L'intero lavoro portato avanti ha il fine di fornire dei benefici all'utente.
+L'informazione riguardante il tipo di parcheggio può essere sfruttata in
+diversi modi e averla a portata di mano potrebbe permettere in futuro di 
+creare nuove funzionalità per cui essa risulti necessaria. Al momento della
+scrittura sono stati individuati due casi d'uso principali per il dato: la 
+rappresentazione visuale dei parcheggi (già descritta) e l'utilizzo all'interno 
+dell'algoritmo di matching di utenti che lasciano un posto e altri che ne
+cercano uno (soggetto di un futuro sviluppo).
 
 \subsection{Informazione visiva}
 
-sapere dove stanno dei parcheggi
+L'utilità che l'utente trae dalla rappresentazione dei parcheggi sulla mappa è 
+quella di poter individuare facilmente delle zone di posteggio. In questo modo,
+egli può cercare dei parcheggi direttamente dalla mappa, cercando aree in cui
+sa che dovrà parcheggiare. Conoscendo anche il tipo del parcheggio, sarà più
+facile individuare il parcheggio visualizzato, una volta che si trova in 
+prossimità di esso.
 
 \subsection{Disponibilità del parcheggio per auto di una certa dimensione}
-% controllare che un auto possa entrare nel parcheggio, controllando il tipo 
-% di parcheggio, se esso è parallelo e l'auto che sta arrivando è più lunga
-% di quella di colui che se ne va, essa potrebbe non entrare nel parcheggio
+
+L'algoritmo di matching degli utenti utilizzato nell'app serve a far incontrare un
+guidatore che sta per uscire da un parcheggio con un altro che invece sta
+cercando un posto libero nella stessa zona. In questa maniera, il parcheggio può
+essere ceduto dall'uno all'altro. Tra i vari imprevisti che potrebbero presentarsi,
+vi è il fatto che non necessariamente l'auto di colui che sta cercando il parcheggio 
+abbia le dimensioni adatte al parcheggio lasciato. Infatti, questa potrebbe essere 
+più lunga dell'auto dell'altro utente e quindi al momento dello scambio ci si 
+accorgerebbe che questo non può avvenire. Il caso più comune in cui questo potrebbe
+accadere è quando il parcheggio in questione è di tipo parallelo e la lunghezza
+dell'auto uscente è minore di quella dell'auto entrante. Quindi, un controllo 
+aggiuntivo nell'algoritmo, che renda raro un match di questo tipo, eviterebbe la
+maggior parte di questi inconvenienti.
