@@ -5,7 +5,8 @@
 Al fine di poter creare un classificatore per i tipi di parcheggio, la prima cosa
 che è risultata necessaria è stata una raccolta di dati di natura time-series. In particolare, questi dati
 dovevano essere di buona qualità, generati in maniera controllata e avere una chiara
-classificazione che gli permetta di essere utilizzabili per un processo di training. 
+classificazione che gli permetta di essere utilizzabili per un processo di training
+\cite{pattern_extraction_time_series}.
 Per questo motivo è stato importante che la raccolta fosse portata
 avanti da poche persone fidate che fossero in grado di eseguire una serie di azioni
 commettendo il minor numero di errori possibile.\\
@@ -13,21 +14,27 @@ Dal momento che il modello classificatore in questione è destinato ad essere ut
 su applicativi mobile, e più in particolare sull'app GeneroCity, i dati che quest'ultimo
 riceve come input devono provenire da sensori che si trovano direttamente sullo smartphone.
 Così facendo, la modalità più ovvia di raccolta dei dati risulta essere esattamente 
-quella di sfruttare gli stessi sensori dello smartphone.\\
+quella di sfruttare gli stessi sensori dello smartphone
+\cite{classification_smartphone_motion_sensors} \cite{driver_passenger_identification_smartphone}.\\
 Coloro che hanno avuto il compito di raccogliere i dati, erano disposti di un sistema di
 raccoglimento installato all'interno dell'app GeneroCity. Inizialmente, questo era presente
-solo nella versione iOS dell'app, ma successivamente, è stato fatto il porting anche sulla
-versione Android. Questa operazione ha reso possibile che il numero di persone disponibili
+solo nella versione iOS\footnote{iOS page on Apple's website: 
+\href{https://www.apple.com/ios}{\underline{link to the page.}}} dell'app, 
+ma successivamente, è stato fatto il porting anche sulla
+versione Android\footnote{Android's website: 
+\href{https://www.android.com}{\underline{link to the page.}}}.
+Questa operazione ha reso possibile che il numero di persone disponibili
 per la raccolta di dati aumentasse significativamente.\\
 Sfruttando alcuni eventi generati automaticamente dall'app, come ad esempio l'ingresso e
-l'uscita dall'auto, è stato possibile avviare e interrompere la raccolta, senza troppa
-pressione o attenzione dell'utente. Quindi l'interazione da parte dell'utente,
+l'uscita dall'auto \cite{framework_user_experience_car}, è stato possibile avviare e 
+interrompere la raccolta, senza troppa pressione o attenzione dell'utente. Quindi l'interazione
+da parte dell'utente,
 durante il percorso in auto, è stata minima, se non inesistente. Il processo prevedeva soltanto
 che l'utente entrasse in macchina, facesse il suo viaggio e infine uscisse. Nel frattempo 
 l'app si occupava di raccogliere i dati e caricarli su un database in automatico. In questo
 modo, non solo le persone addette alla raccolta non hanno dovuto avere troppe accortezze, ma
 inoltre hanno potuto integrare la raccolta con le loro abitudini quotidiane, senza dover
-dedicare tempo e sforzi extra solemente per questo scopo. Infatti, qualvolta essi hanno
+dedicare tempo e sforzi extra solemente per questo scopo. Infatti, qualvolta essi abbiano
 utilizzato l'auto nella loro vita quotidiana, hanno potuto aggiungere una, o più registrazioni
 al database. \\
 Anche per quanto riguarda la classificazione del tipo di parcheggio, si è cercato un approccio
@@ -45,7 +52,7 @@ un modello accurato, che sia in grado di effettuare una distinzione chiara tra l
 di parcheggio. Un'utente qualsiasi, invece, potrebbe selezionare un'etichetta errata per svariati
 motivi, come un'idea confusa riguardo le diverse tipologie di parcheggi, oppure una scarsa volontà
 di collaborazione che potrebbe indurlo a selezionare un tipo randomico. Si può ben intuire che la
-selezione di un tipo randomico, tra le varie opzioni proposte, da' un contributo deleterio e quindi
+selezione di un tipo randomico, tra le varie opzioni proposte, dà un contributo deleterio e quindi
 peggiore al caso in cui l'utente non rispondesse proprio alla notifica inviata e quindi non selezionasse
 alcun tipo per uno specifico parcheggio. Tuttavia, anche quando ad effettuare l'operazione vi è una
 persona che ha ben chiaro come comportarsi, è possibile che degli errori vengano commessi. Infatti,
@@ -55,21 +62,24 @@ individuare. Oppure, è possibile che un parcheggio venga effettuato con una man
 più frequenti, per motivi che possono essere dovuti alla condizione del traffico, alla disposizione di
 altri veicoli circostanti, allo stile di guida o all'urgenza del guidatore, ecc. A causa di questi
 motivi, il dataset ottenuto non può essere considerato privo di difetti, ma si è cercato, attraverso
-queste accortezze, di ottenere una qualità dei dati migliore possibile.
+queste accortezze, di ottenere una qualità dei dati \cite{data_quality_considerations} migliore possibile.
 
 \subsection{Pulitura e processamento}
 
 Benchè i dati raccolti si trovassero in buono stato e strutturati in maniera adeguata per 
 essere utilizzati con lo scopo di effettuare il training per un modello ML che classificasse
-i tipi di parcheggio, essi non potevano essere considerati "puliti" e pronti all'utilizzo.
+i tipi di parcheggio, essi non potevano essere considerati "puliti" e pronti all'utilizzo 
+\cite{data_cleaning}.
 Tra le diverse cose, essi contenevano informazioni aggiuntive e fuorvianti che avrebbero
 peggiorato le performance del classificatore. Un esempio è composto da tutti i dati raccolti
 dal momento in cui il parcheggio viene terminato, fino a quando l'app non termina la raccolta,
 dopo che l'utente è uscito dall'auto.\\
 Addizionalmente alla pulitura iniziale, i dati vanno incontro anche ad un intensa sequenza
-di operazioni che cercano di esaltare e isolare le feature più significative che possono
+di operazioni che cercano di esaltare e isolare le feature più significative 
+\cite{data_preprocessing_supervised_learning} che possono
 essere analizzate dal classificatore. Una delle operazioni che può essere presa come esempio 
-consiste nelle rotazioni 3D che vengono applicate ai dati degli accelerometri e dei giroscopi
+consiste nelle rotazioni 3D \cite{applications_euler_rotation_angles} che vengono applicate 
+ai dati degli accelerometri e dei giroscopi
 per fare in modo che questi ultimi risultino come se fossero stati raccolti con lo smartphone
 orientato sempre allo stesso modo rispetto all'auto.\\
 Dunque, è stato realizzato uno script in grado di scaricare tutti le registrazioni di dati
@@ -115,13 +125,15 @@ una serie di valori:
     \item \emph{heading}: consiste nell'angolo tra la punta dello smartphone è il nord geografico,
     rappresentato in gradi.
     \item \emph{acceleration}: contiene i tre componenti dell'accelerazione ottenuti attraverso 
-    gli accelerometri e processati direttamente dalla libreria \emph{CoreMotion}. 
+    gli accelerometri e processati direttamente dalla libreria \emph{CoreMotion}\footnote{\emph{CoreMotion} page on Apple's website: 
+    \href{https://developer.apple.com/documentation/coremotion}{\underline{link to the page.}}}. 
     Questo significa che i tre componenti relativi ai tre assi non contengono più
     l'informazione sulla gravità, questa è stata sottratta automaticamente.
     \item \emph{rotationRate}: similmente, contiene i tre componenti estratti dai giroscopi
     e adeguatamente processati.
     \item \emph{speed}: consiste nell'attuale velocità calcolata dal dispositivo ed ottenuta 
-    grazie alla libreria \emph{CoreLocation}.
+    grazie alla libreria \emph{CoreLocation}\footnote{\emph{CoreLocation} page on Apple's website: 
+    \href{https://developer.apple.com/documentation/corelocation}{\underline{link to the page.}}}.
 \end{itemize}
 
 Il \emph{ParkTypeSampleCollector} è dotato di un buffer di \emph{Sample} di dimensione fissa.
