@@ -100,7 +100,7 @@ Sono stati scelti alcuni sensori, i quali dati sarebbero stati utili per l'estra
 di feature da inviare come input al classificatore. Questi sensori sono principalmente:
 \begin{itemize}
     \item bussola
-    \item accelerometri
+    \item accelerometri \cite{activity_recognition_accelerometer}
     \item giroscopi
     \item GPS per la velocità
 \end{itemize}
@@ -125,15 +125,17 @@ una serie di valori:
     \item \emph{heading}: consiste nell'angolo tra la punta dello smartphone è il nord geografico,
     rappresentato in gradi.
     \item \emph{acceleration}: contiene i tre componenti dell'accelerazione ottenuti attraverso 
-    gli accelerometri e processati direttamente dalla libreria \emph{CoreMotion}\footnote{\emph{CoreMotion} page on Apple's website: 
-    \href{https://developer.apple.com/documentation/coremotion}{\underline{link to the page.}}}. 
+    gli accelerometri e processati direttamente dalla libreria \emph{Core Motion}\footnote{\emph{Core Motion} page on Apple's website: 
+    \href{https://developer.apple.com/documentation/coremotion}{\underline{link to the page.}}}
+    \cite{using_core_motion}. 
     Questo significa che i tre componenti relativi ai tre assi non contengono più
     l'informazione sulla gravità, questa è stata sottratta automaticamente.
     \item \emph{rotationRate}: similmente, contiene i tre componenti estratti dai giroscopi
     e adeguatamente processati.
     \item \emph{speed}: consiste nell'attuale velocità calcolata dal dispositivo ed ottenuta 
-    grazie alla libreria \emph{CoreLocation}\footnote{\emph{CoreLocation} page on Apple's website: 
-    \href{https://developer.apple.com/documentation/corelocation}{\underline{link to the page.}}}.
+    grazie alla libreria \emph{Core Location}\footnote{\emph{Core Location} page on Apple's website: 
+    \href{https://developer.apple.com/documentation/corelocation}{\underline{link to the page.}}}
+    \cite{introduction_core_location}.
 \end{itemize}
 
 Il \emph{ParkTypeSampleCollector} è dotato di un buffer di \emph{Sample} di dimensione fissa.
@@ -148,7 +150,7 @@ buffer, fino al suo riempimento, e successivamente aggiungere un potenziale nuov
 rimpiazzando il meno recente presente nel buffer. Questa operazione è stata implementata
 in tempo costante, grazie ad un indice utilizzato in aggiunta. Dal momento che non vengono
 salvati i timestamp "reali" relativi ai singoli campioni, dei timestamp verranno calcolati
-dinamicamente al termine utilizzando gli indici del buffer e l'intervallo di campionamento.
+dinamicamente al termine, utilizzando gli indici del buffer e l'intervallo di campionamento.
 La dimensione che è stata scelta per il buffer è di 2048 elementi, che si traducono in una
 registrazione finale che coprirà un intervallo di tempo che dura al massimo qualche minuto.\\
 Il raccoglitore viene azionato ogni volta che passa la quantità di tempo relativo all'
@@ -156,7 +158,7 @@ intervallo di campionamento. Ovvero, all'avvio di esso, ha inizio un ciclo che
 termina solamente quando l'auto è stata parcheggiata. Ad ogni iterazione viene aggiunto un
 nuovo campione al buffer e poi viene effettuata un'attesa, prima che si passi all'iterazione
 successiva. L'intero ciclo viene eseguito asincronamente utilizzando la chiamata
-\emph{DispatchQueue.global().async}, fornita da iOS. Ciò che fa questa funzione è
+\emph{DispatchQueue.global().async} \cite{gcd_basics}, fornita da iOS. Ciò che fa questa funzione è
 accodare una funzione, fornita dallo sviluppatore, alla coda di esecuzione globale del
 sistema operativo, in maniera asincrona.\\
 L'avvio e la terminazione del raccoglitore vengono eseguiti rispettivamente nei metodi 
@@ -166,7 +168,8 @@ esce dal parcheggio all'inizio del tragitto e quando parcheggia al termine di es
 \section{Caricamento dati nel database}
 
 Al termine di ogni registrazione, i dati raccolti devono essere caricati nel database.
-Come formato di salvataggio delle registrazioni è stato scelto JSON. Quindi, non appena
+Come formato di salvataggio delle registrazioni è stato scelto JSON \cite{json_data_exchanging}. 
+Quindi, non appena
 il raccoglitore termina la raccolta, il buffer ottenuto deve essere convertito in un 
 oggetto JSON. In particolare, questo avviene ponendo, come chiavi dell'oggetto, i timestamp
 calcolati rispetto al primo elemento. Ad ogni chiave viene associato un'array di valori, che
@@ -190,7 +193,9 @@ Dal momento che i dati sono stati raccolti quotidianamente, il dataset delle reg
 si è andato a popolare di giorno in giorno. In questo modo, è stato possibile effettuare il 
 training del modello classificatore di tanto in tanto, al fine di migliorarne le performance
 sempre di più, avendo a disposizione più registrazioni. Per automatizzare il processo di 
-preparazione dei dati, è stato creato uno script, composto da moduli, in Python. Come
+preparazione dei dati, è stato creato uno script, composto da moduli, in Python\footnote{
+Python's website: 
+\href{https://www.python.org}{\underline{link to the page.}}}. Come
 precedentemente anticipato, la funzione principale dello script è stata quella di scaricare,
 pulire e processare i dati ottenuti. Infatti, ad ogni invocazione esso
 \begin{enumerate}
@@ -213,13 +218,13 @@ spazio 3D.
 
 Avendo i dati pronti e nel giusto formato, il passo successivo è quello di effettuare il 
 training di un modello classificatore.\\
-Per creare i modelli è stato deciso di utilizzare la libreria \emph{CreateML} di Apple.
+Per creare i modelli è stato deciso di utilizzare la libreria \emph{Create ML} di Apple.
 Questa libreria da modo di realizzare nuovi modelli di machine learning con una prospettiva
 ad alto livello, permettendo l'utilizzo anche ad utenti che non sono dotati di una conoscenza
 molto approfondita a riguardo. Essa offre anche un'interfaccia grafica che rende la creazione 
 ancora più intuitiva.\\
 Al fine di ottenere un classificatore per tipi di parcheggio, sono stati utilizzati due 
-approcci diversi, a partire da due template differenti di \emph{CreateML}:
+approcci diversi, a partire da due template differenti di \emph{Create ML}:
 \begin{itemize}
     \item una rete neurale convoluzionale, utilizzando il \emph{Motion Activity Classifier};
     \item un tree ensemble, utilizzando il \emph{Tabular Classifier}
