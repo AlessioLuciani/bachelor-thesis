@@ -146,9 +146,11 @@ Come già anticipato, la scelta di eseguire la classificazione del tipo di
 parcheggio in locale nell'applicazione implica delle conseguenze.
 Una delle più importanti tra queste è certamente il fatto di dover
 pulire e preparare i dati direttamente in ambiente iOS. Ciò
-ha reso obbligato un porting dello script dedicato a processare i
+ha reso obbligatorio un porting dello script dedicato a processare i
 dati delle registrazioni, che è scritto in Python. Il linguaggio di 
-destinazione del porting è Swift, ovvero il linguaggio utilizzato
+destinazione del porting è Swift\footnote{
+Swift's website: 
+\href{https://swift.org}{\underline{link to the page.}}}, ovvero il linguaggio utilizzato
 per sviluppo di GeneroCity iOS.
 
 \subsection{Da Python a Swift}
@@ -162,7 +164,8 @@ con ampia compatibilità, Swift ha una target più ristretto, che
 mira principalmente ai dispositivi con sistemi operativi Apple.
 Tuttavia, la differenza maggiore sta nel fatto che Python si tratta
 di un linguaggio interpretato, mentre Swift è un linguaggio compilato. 
-Il secondo, quindi, ha bisogno di un compilatore apposito che generi
+Il secondo, quindi, ha bisogno di un compilatore apposito (ovvero \emph{Swiftlang} 
+e \emph{LLVM} \cite{llvm_clang}) che generi
 i binari che infine vengono eseguiti.\\
 Essendo due linguaggi molto utilizzati e con un background notevole,
 entrambi sono dotati di un solida fornitura di librerie. Infatti, 
@@ -227,8 +230,9 @@ lineare:
     Di fatto, a causa della natura di linguaggio interpretato e della
     tipizzazione dinamica, Python non segnala potenziali problemi scaturiti
     da chiamate di funzioni su una variabile nulla e quindi semplicemente 
-    genera una eccezione a tempo di esecuzione. A sua differenza, Swift
-    introduce il concetto di tipo opzionale. Un tipo opzionale (sintatticamente
+    genera un'eccezione a tempo di esecuzione. Differentemente, Swift
+    introduce il concetto di tipo opzionale \cite{empirical_study_usage_swift}. 
+    Un tipo opzionale (sintatticamente
     con lo stesso nome del corrispettivo tipo normale, ma seguito da "?") consiste 
     in un tipo le cui variabili possono contenere un valore nullo. Questo implica
     che i tipi non opzionali di Swift non possono assolutamente trattare 
@@ -322,7 +326,9 @@ per le strutture semplici, ma per quelle più complesse, che sono
 organizzate diversamente all'interno dei due linguaggi.\\
 In Python si può sfruttare una libreria nativa per convertire dati in 
 formato JSON direttamente in strutture del linguaggio (dizionari, liste, ecc.).
-In Swift esiste una libreria di terze parti, chiamata \emph{SwiftyJSON}, che
+In Swift esiste una libreria di terze parti, chiamata \emph{SwiftyJSON\footnote{
+SwiftyJSON repository on GitHub: 
+\href{https://github.com/SwiftyJSON/SwiftyJSON}{\underline{link to the page.}}}}, che
 ha un comportamento simile a quella di Python, ma con differenze dovute alla
 presenza dei tipi opzionali nel linguaggio. Per mantenere il codice Swift, simile
 a quello Python, è stata utilizzata \emph{SwiftyJSON} per creare una struttura a 
@@ -403,13 +409,18 @@ di archiviazione. Infatti, essi vengono caricati nel database e processati in lo
 immediatamente dopo che la raccolta abbia terminato.\\
 Tra le vere e proprie azioni applicate sui dati, è capitato spesso di dover utilizzare 
 operazioni di algebra lineare, o più in generale, operazioni sofisticate sui numeri.
-Nello script Python è stata scelta la libreria esterna \emph{Numpy}, in quanto dotata
+Nello script Python è stata scelta la libreria esterna \emph{NumPy\footnote{
+NumPy's website: 
+\href{https://numpy.org}{\underline{link to the page.}}}} \cite{guide_numpy},
+in quanto dotata
 di tutte le funzionalità da noi richieste. Degli esempi di usi che ne sono stati fatti 
 ci sono le rotazioni 3D utilizzando matrici, calcoli di prodotti tra matrici, calcoli 
 di deviazioni standard, ecc. Chiaramente queste tipologie di operazioni sono rimaste
 presenti nel programma Swift e quindi è stata fatta una ricerca di librerie sostitutive 
-che potessero rimpiazzare \emph{Numpy}. Per quanto riguarda le operazioni su vettori 
-e matrici, è stata trovata ed utilizzata la libreria \emph{SIMD}, sviluppata 
+che potessero rimpiazzare \emph{NumPy}. Per quanto riguarda le operazioni su vettori 
+e matrici \cite{simd_vector_operations}, è stata trovata ed utilizzata la libreria 
+\emph{SIMD\footnote{SIMD page on Apple's website: 
+\href{https://developer.apple.com/documentation/accelerate/simd}{\underline{link to the page.}}}}, sviluppata 
 direttamente da Apple. Questa libreria offre una vasta varietà di funzionalità
 riguardanti l'algebra lineare, infatti è stato possibile utilizzarla per definire
 matrici, effettuare dot e cross product, applicare normalizzazioni, ecc.
@@ -428,7 +439,9 @@ Per poter effettuare una predizione in locale nell'app, è chiaramente necessari
 il modello classificatore venga inserito nell'app stessa. Attraverso lo strumento di 
 creazione del modello, si è potuto estrarre il modello addestrato, compattato in un 
 solo file con estensione ".mlmodel". Per effettuare il deploy di questo file nell'app,
-è bastato soltanto aggiungerlo al progetto Xcode e utilizzare l'API fornita 
+è bastato soltanto aggiungerlo al progetto Xcode\footnote{
+Xcode page on Apple's website: 
+\href{https://developer.apple.com/xcode/}{\underline{link to the page.}}} e utilizzare l'API fornita 
 appositamente da \emph{Core ML}. Infatti, una volta che si ottiene il modello in quel
 formato, esso può essere sfruttato completamente attraverso questa libreria.
 \emph{Core ML} si occupa della generazione automatica di una serie di classi che 
