@@ -52,7 +52,7 @@ Entrambi gli approcci hanno vantaggi e svantaggi. Tra i vantaggi di una
     \item la possibilità di sostituire il modello con una versione più aggiornata
     senza dover per forza rilasciare un nuovo aggiornamento dell'applicativo client
     \item poter effettuare l'esecuzione di un modello al posto di un dispositivo
-   	con scarsa potenza di calcolo (es. un dispositivo embedded)
+   	con scarsa potenza di calcolo (es. un dispositivo embedded) \cite{computation_offloading_ml}
 \end{itemize}
 Invece tra quelli di una esecuzione lato client:
 \begin{itemize}
@@ -72,14 +72,17 @@ principalmente per due motivi:
     evitare che il server backend venga sottoposto a un carico troppo oneroso,
     causato dalla potenziale esecuzione di un numero molto elevato di 
     classificazioni in parallelo;
-    \item sfruttare il \emph{Neural Engine} dei dispositivi Apple, attraverso la 
-    libreria \emph{ ML} (solamente per la versione iOS di GeneroCity);
+    \item sfruttare il \emph{Neural Engine} \cite{mobile_machine_learning_arm} dei 
+    dispositivi Apple, attraverso la libreria \emph{Core ML}\footnote{
+    \emph{Core ML} page on Apple's website: 
+    \href{https://developer.apple.com/documentation/coreml}{\underline{link to the page.}}} 
+    \cite{introduction_core_ml} (solamente per la versione iOS di GeneroCity);
 \end{itemize}
 
 Dal momento che il processo di classificazione, attraverso un modello, è 
 abbastanza intensivo e inoltre richiede la pulitura dei dati preliminare,
 permettere che venga eseguito su un server potrebbe generare rallentamenti.
-Questo si verifica soprattutto se il programma backend non è ditribuito.
+Questo si verifica soprattutto se il programma backend non è distribuito.
 Oltre a ciò, vi è il fatto che l'esecuzione del modello avviene in seguito
 ad un'azione dell'utente (ovvero al parcheggio dell'auto) e nel caso in cui 
 ci fossero degli utenti malintenzionati, si correrebbe il rischio di
@@ -100,8 +103,13 @@ infatti, è stato creato proprio da Apple. Ci sono principalmente due
 modi per ottenere un modello di questa tipologia:
 \begin{itemize}
     \item crearlo direttamente attraverso la libreria \emph{Create ML};
-    \item convertirne uno di un altro formato (es. TensorFlow) attraverso 
-    un apposito strumento di conversione;
+    \item convertirne uno di un altro formato (es. TensorFlow\footnote{
+    TensorFlow's website: 
+    \href{https://www.tensorflow.org}{\underline{link to the page.}}}) attraverso 
+    un apposito strumento di conversione, che fa parte della libreria Python
+    \emph{coremltools\footnote{
+    \emph{coremltools} page on GitHub: 
+    \href{https://apple.github.io/coremltools/}{\underline{link to the page.}}}};
 \end{itemize}
 Siccome per iniziare è stato integrato il modello soltanto nella versione
 iOS dell'app, è stata scelta la prima strada, ovvero generarlo con
@@ -115,7 +123,7 @@ accoppiata con l'hardware GPU presente negli stessi dispositivi Apple.
 Inoltre, nei dispositivi delle generazioni più recenti è stato inserito
 un componente dedicato esclusivamente all'esecuzione di algoritmi di
 intelligenza artificiale e modelli ML, chiamato \emph{Neural Engine}.
-Esso si tratta di una sezione della GPU che è provvista di una 
+Esso si tratta di una sezione del SoC del dispositivo, che è provvista di una 
 architettura ad hoc e che viene sfruttata quando vengono invocate delle
 predizioni attraverso \emph{Core ML}. Questa sezione è stata aggiunta 
 a causa di una presenza del machine learning all'interno delle app
