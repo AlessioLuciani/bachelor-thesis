@@ -168,7 +168,8 @@ esce dal parcheggio all'inizio del tragitto e quando parcheggia al termine di es
 \section{Caricamento dati nel database}
 
 Al termine di ogni registrazione, i dati raccolti devono essere caricati nel database.
-Come formato di salvataggio delle registrazioni è stato scelto JSON \cite{json_data_exchanging}. 
+Come formato di salvataggio delle registrazioni è stato scelto JSON 
+\cite{javascript_object_notation} \cite{json_data_exchanging}. 
 Quindi, non appena
 il raccoglitore termina la raccolta, il buffer ottenuto deve essere convertito in un 
 oggetto JSON. In particolare, questo avviene ponendo, come chiavi dell'oggetto, i timestamp
@@ -192,6 +193,7 @@ viene salvata la stringa serializzata, ottenuta dall'oggetto JSON.
 Dal momento che i dati sono stati raccolti quotidianamente, il dataset delle registrazioni
 si è andato a popolare di giorno in giorno. In questo modo, è stato possibile effettuare il 
 training del modello classificatore di tanto in tanto, al fine di migliorarne le performance
+\cite{impact_training_dataset_size}
 sempre di più, avendo a disposizione più registrazioni. Per automatizzare il processo di 
 preparazione dei dati, è stato creato uno script, composto da moduli, in Python\footnote{
 Python's website: 
@@ -203,8 +205,8 @@ pulire e processare i dati ottenuti. Infatti, ad ogni invocazione esso
     salvate in locale;
     \item effettua tutte le procedure di pulitura e processamento dei dati;
     \item prepara i dati per essere utilizzati come input del classificatore e crea una 
-    struttura di file CSV, con directory classificate in base all'etichetta scelta
-    dall'utente per la registrazione;
+    struttura di file CSV \cite{common_format_csv}, con directory classificate in 
+    base all'etichetta scelta dall'utente per la registrazione;
 \end{enumerate}
 Inoltre, insieme allo script è presente un modulo che ha lo scopo di effettuare il plotting
 dei dati. Questo plotter è utilizzato per analizzare i dati in maniera visiva ed è in
@@ -218,7 +220,10 @@ spazio 3D.
 
 Avendo i dati pronti e nel giusto formato, il passo successivo è quello di effettuare il 
 training di un modello classificatore.\\
-Per creare i modelli è stato deciso di utilizzare la libreria \emph{Create ML} di Apple.
+Per creare i modelli è stato deciso di utilizzare la libreria \emph{Create ML}\footnote{
+\emph{Create ML} page on Apple's website: 
+\href{https://developer.apple.com/documentation/createml}{\underline{link to the page.}}}
+\cite{custom_core_ml_models_create_ml} di Apple.
 Questa libreria da modo di realizzare nuovi modelli di machine learning con una prospettiva
 ad alto livello, permettendo l'utilizzo anche ad utenti che non sono dotati di una conoscenza
 molto approfondita a riguardo. Essa offre anche un'interfaccia grafica che rende la creazione 

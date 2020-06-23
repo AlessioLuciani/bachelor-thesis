@@ -73,7 +73,7 @@ principalmente per due motivi:
     causato dalla potenziale esecuzione di un numero molto elevato di 
     classificazioni in parallelo;
     \item sfruttare il \emph{Neural Engine} dei dispositivi Apple, attraverso la 
-    libreria \emph{CoreML} (solamente per la versione iOS di GeneroCity);
+    libreria \emph{ ML} (solamente per la versione iOS di GeneroCity);
 \end{itemize}
 
 Dal momento che il processo di classificazione, attraverso un modello, è 
@@ -85,30 +85,30 @@ ad un'azione dell'utente (ovvero al parcheggio dell'auto) e nel caso in cui
 ci fossero degli utenti malintenzionati, si correrebbe il rischio di
 ricevere troppe richieste allo stesso tempo.
 
-\subsection{Predizione in locale con CoreML}
+\subsection{Predizione in locale con Core ML}
 
 Dovendo effettuare la classificazione in locale, su piattaforma iOS, la 
-libreria che è risultata più adatta ai nostri scopi è stata \emph{CoreML}.
+libreria che è risultata più adatta ai nostri scopi è stata \emph{Core ML}.
 Questa libreria da la possibilità di integrare modelli machine learning 
 direttamente all'interno delle app. Oltre a fornire dei modelli già 
 addestrati e pronti all'uso (tra cui uno per il riconoscimento di immagini,
 un altro per la trascrizione audio-testo, ecc.), essa offre dei modi per 
 utilizzare modelli creati direttamente dallo sviluppatore.\\
-Innanzitutto, \emph{CoreML} richiede che i modelli proposti dallo
+Innanzitutto, \emph{Core ML} richiede che i modelli proposti dallo
 sviluppatore siano del formato proprietario ".mlmodel". Questo formato,
 infatti, è stato creato proprio da Apple. Ci sono principalmente due 
 modi per ottenere un modello di questa tipologia:
 \begin{itemize}
-    \item crearlo direttamente attraverso la libreria \emph{CreateML};
+    \item crearlo direttamente attraverso la libreria \emph{Create ML};
     \item convertirne uno di un altro formato (es. TensorFlow) attraverso 
     un apposito strumento di conversione;
 \end{itemize}
 Siccome per iniziare è stato integrato il modello soltanto nella versione
 iOS dell'app, è stata scelta la prima strada, ovvero generarlo con
-\emph{CreateML}. In questo modo non è stato necessario utilizzare
+\emph{Create ML}. In questo modo non è stato necessario utilizzare
 strumenti più personalizzabili, ma molto più complessi e a basso
 livello, come TensorFlow.\\
-La scelta di \emph{CoreML} è stata ovvia, in quanto su iOS è l'unica
+La scelta di \emph{Core ML} è stata ovvia, in quanto su iOS è l'unica
 libreria che permette di sfruttare al meglio l'hardware del dispositivo.
 Infatti, essa è stata progettata proprio per essere utilizzata in
 accoppiata con l'hardware GPU presente negli stessi dispositivi Apple.
@@ -117,7 +117,7 @@ un componente dedicato esclusivamente all'esecuzione di algoritmi di
 intelligenza artificiale e modelli ML, chiamato \emph{Neural Engine}.
 Esso si tratta di una sezione della GPU che è provvista di una 
 architettura ad hoc e che viene sfruttata quando vengono invocate delle
-predizioni attraverso \emph{CoreML}. Questa sezione è stata aggiunta 
+predizioni attraverso \emph{Core ML}. Questa sezione è stata aggiunta 
 a causa di una presenza del machine learning all'interno delle app
 che è aumentata drasticamente negli ultimi anni e che con ogni
 probabilità continuerà a diffondersi. Grazie a questo componente,
@@ -421,9 +421,9 @@ il modello classificatore venga inserito nell'app stessa. Attraverso lo strument
 creazione del modello, si è potuto estrarre il modello addestrato, compattato in un 
 solo file con estensione ".mlmodel". Per effettuare il deploy di questo file nell'app,
 è bastato soltanto aggiungerlo al progetto Xcode e utilizzare l'API fornita 
-appositamente da \emph{CoreML}. Infatti, una volta che si ottiene il modello in quel
+appositamente da \emph{Core ML}. Infatti, una volta che si ottiene il modello in quel
 formato, esso può essere sfruttato completamente attraverso questa libreria.
-\emph{CoreML} si occupa della generazione automatica di una serie di classi che 
+\emph{Core ML} si occupa della generazione automatica di una serie di classi che 
 permettono allo sviluppatore di interagire con il modello. In particolare, fornendo
 un modello chiamato "ModelloEsempio.mlmodel", verranno generate le seguenti classi:
 \begin{itemize}

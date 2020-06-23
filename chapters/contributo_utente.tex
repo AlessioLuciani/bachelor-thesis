@@ -26,7 +26,9 @@ opzione tra quelle disponibili.
 Per creare la nuova notifica, la prima cosa che è stato necessario fare è stata registrarla
 nel sistema, attraverso l'app. Dato che si tratta di una \emph{Actionable Notification},
 è stata registrata una \emph{UNNotificationCategory} e delle \emph{UNNotificationAction}
-legate ad essa. Queste classi provengono tutte dalla libreria \emph{UserNotifications}. 
+legate ad essa. Queste classi provengono tutte dalla libreria \emph{UserNotifications}\footnote{
+\emph{UserNotifications} page on Apple's website: 
+\href{https://developer.apple.com/documentation/usernotifications}{\underline{link to the page.}}}. 
 La categoria è necessaria per distinguere una \emph{Actionable Notification}
 di un tipo da una di un altro. Quindi, è stata creata una nuova categoria chiamata 
 \emph{PARKTYPE}, utilizzata esclusivamente per questa notifica. A questa categoria sono 
@@ -47,7 +49,8 @@ attenzione. % TODO: maybe link here paper "Driver Distraction from Dashboard and
 
 \section{Etichetta selezionata dall'utente}
 
-Nel momento in cui l'utente riceve la notifica, esso può rispondere scegliendo un'opzione,
+Nel momento in cui l'utente riceve la notifica, esso può rispondere scegliendo un'opzione
+\cite{options_notification},
 oppure ignorarla completamente. Nel caso in cui la notifica viene ignorata, semplicemente 
 non accade nulla, ovvero, l'etichetta del tipo di parcheggio non viene caricata sul
 database. Invece, in caso contrario, è necessario aggiornare il valore nel database per 
