@@ -24,8 +24,8 @@ dell'utente in qualche modo.\\
 In particolare, l'obiettivo principale era l'ottenimento del tipo di parcheggio, ma 
 attraverso l'intero procedimento è stato possibile ottenere anche il valore della 
 bussola senza dover fare sforzi aggiuntivi.\\
-I due utilizzi principali di queste informazioni che per il momento vengono fatti sono
-mostrare visivamente sulla mappa i tipi di parcheggio, alle rispettive coordinate, e
+I due utilizzi principali di queste informazioni, che vengono fatti per il momento, sono
+mostrare visivamente sulla mappa i tipi di parcheggio alle rispettive coordinate, e
 migliorare l'algoritmo di creazione dei match tra utenti che lasciano un parcheggio e 
 quelli che ne cercano uno.\\
 Mostrare i parcheggi sulla mappa offre all'utente la possibilità di poter trovare 
@@ -43,7 +43,7 @@ dell'interfaccia utente, sono sufficentemente maturi e pronti ad un potenziale r
 Invece, per quanto riguarda l'algoritmo di matching, esso viene utilizzato per 
 rendere possibile uno scambio di parcheggio tra un utente che sta lasciando lo 
 stesso e un altro che ne sta cercando uno. Essendo a conoscenza dei tipi dei 
-parcheggi, al momento della ricerca di un parcheggio disponibile, da parte di un
+parcheggi, al momento della ricerca di un parcheggio disponibile da parte di un
 utente che possa prendere il posto lasciato, si potranno preferire i posti in cui
 è più probabile che l'auto di colui che cerca entri e scartare quelli in cui invece
 probabilmente l'auto non entrerà a causa delle dimensioni.\\
@@ -76,7 +76,10 @@ tenendo conto di tutti i vincoli presenti e le necessità dell'utente finale.
 \subsection{Chiamata API per la richiesta dei parcheggi in un'area}
 
 In GeneroCity iOS sono state utilizzate le mappe di Apple, che vengono distribuite
-attraverso la libreria \emph{MapKit}. La classe responsabile della rappresentazione
+attraverso la libreria \emph{MapKit\footnote{MapKit page on Apple's website: 
+\href{https://developer.apple.com/documentation/mapkit}{\underline{link to the page.}}}}
+\cite{introduction_apple_maps_mapkit}.
+La classe responsabile della rappresentazione
 grafica di una mappa è \emph{MKMapView}. Quest'ultima possiede un attributo \textbf{region}
 che corrisponde all'informazione sull'area mostrata sullo schermo nell'istante corrente.
 Infatti, quando l'area visibile sul display cambia (ad esempio in seguito ad uno swipe
@@ -241,7 +244,8 @@ così facendo, non si va ad applicare caching a particolari zone della mappa
 e così, nel caso in cui vengano registrati nuovi parcheggi nel database, questi 
 verranno scaricati non appena l'utente visualizzerà la zona interessata.\\
 La maniera che fornisce \emph{MapKit} di disegnare delle forme sulla mappa è 
-attraverso gli \emph{MKOverlay}. Infatti, attraverso questi oggetti, è possibile
+attraverso gli \emph{MKOverlay} \cite{displaying_objects_map}. Infatti, 
+attraverso questi oggetti, è possibile
 rappresentare forme di svariate tipologie, applicando colori, trasparenze e altro.
 La lista degli overlay viene salvata come attributo della mappa e così 
 è utilizzata per renderizzare tutte le forme sullo schermo, quando è necessario.\\
@@ -333,7 +337,8 @@ Quando degli overlay vengono aggiunti alla mappa, questi sono pronti per essere
 renderizzati sullo schermo, ma è necessario che vengano specificate delle informazioni
 per impostare le proprietà grafiche delle varie tipologie. Per fare questo, il delegate
 della mappa offre un metodo che viene chiamato appena prima che avvenga il rendering
-di un overlay. Tra i parametri vi è l'\emph{MKOverlay} stesso e il tipo di ritorno
+di un overlay \cite{dynamic_rendering_map_information}. Tra i parametri vi è 
+l'\emph{MKOverlay} stesso e il tipo di ritorno
 è \emph{MKOverlayRenderer}, ovvero l'oggetto utilizzato dalla mappa per effettuare 
 il rendering. All'interno di questo metodo vengono fatti i controlli per la selezione
 della forma e dei colori dell'overlay. Infatti, come prima cosa si controlla il titolo
@@ -350,20 +355,20 @@ dei parcheggi spariscono dallo schermo. Quando invece lo switch viene riattivato
 viene forzata una nuova richiesta all'API e vengono renderizzati nuovamente i parcheggi
 presenti nella porzione di mappa visualizzata.
 
-\section{Approccio community-driven}
+\section{Approccio crowdsource}
 
 Come già discusso, l'approccio utilizzato per l'ottenimento delle istanze di parcheggio
-fa leva sull'interazione implicita dell'utente. Tutti i parcheggi caricati nel database
+fa leva sull'interazione implicita \cite{explicating_implicit_interaction}. Tutti i 
+parcheggi caricati nel database
 provengono da manovre di parcheggio reali e non sono stati inseriti manualmente dagli
 sviluppatori. In questo modo, tenendo conto dei dovuti controlli di autenticità che 
 dovranno essere applicati, si andranno a popolare di parcheggi tutte le zone in cui 
-viene utilizzata l'app. Di conseguenza, diventerà sempre più accurata l'informazione
+viene utilizzata l'app \cite{crowdsourcing_geospatial_data}. Di conseguenza, diventerà 
+sempre più accurata l'informazione
 sulla presenza di una determinata zona di posteggio in una specifica area. Questo 
 approccio è quindi di natura molto scalabile e può essere sfruttato, con le dovute
 accortezze, per facilitare un graduale incremento di utenza in diverse città e 
 località.
-
-% TODO: maybe add some reference about this community-driven technique 
 
 \section{Beneficio dell'utente} 
 
