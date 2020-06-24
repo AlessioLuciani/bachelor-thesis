@@ -3,17 +3,25 @@
 
 \subsection{Raccolta}
 Al fine di poter creare un classificatore per i tipi di parcheggio, la prima cosa
-che è risultata necessaria è stata una raccolta di dati di natura time-series. In particolare, questi dati
+che è risultata necessaria è stata una raccolta di dati (una vista ad alto livello del
+flusso di operazioni di raccolta è mostrata nella figura 
+\ref{flow_diagram_raccolta_dati}) di natura time-series. In particolare, questi dati
 dovevano essere di buona qualità, generati in maniera controllata e avere una chiara
 classificazione che gli permetta di essere utilizzabili per un processo di training
 \cite{pattern_extraction_time_series}.
 Per questo motivo è stato importante che la raccolta fosse portata
 avanti da poche persone fidate che fossero in grado di eseguire una serie di azioni
 commettendo il minor numero di errori possibile.\\
+\begin{figure}[]
+    \centering
+    \includegraphics[width=14cm]{images/flow_diagram_raccolta_dati.png}
+    \caption{Diagramma di flusso della raccolta dati.}
+    \label{flow_diagram_raccolta_dati}
+\end{figure}
 Dal momento che il modello classificatore in questione è destinato ad essere utilizzato
 su applicativi mobile, e più in particolare sull'app GeneroCity, i dati che quest'ultimo
 riceve come input devono provenire da sensori che si trovano direttamente sullo smartphone.
-Così facendo, la modalità più ovvia di raccolta dei dati risulta essere esattamente 
+Così facendo, la modalità più ovvia di raccolta dei dati risulta essere 
 quella di sfruttare gli stessi sensori dello smartphone
 \cite{classification_smartphone_motion_sensors} \cite{driver_passenger_identification_smartphone}.\\
 Coloro che hanno avuto il compito di raccogliere i dati, erano disposti di un sistema di
@@ -62,7 +70,7 @@ individuare. Oppure, è possibile che un parcheggio venga effettuato con una man
 più frequenti, per motivi che possono essere dovuti alla condizione del traffico, alla disposizione di
 altri veicoli circostanti, allo stile di guida o all'urgenza del guidatore, ecc. A causa di questi
 motivi, il dataset ottenuto non può essere considerato privo di difetti, ma si è cercato, attraverso
-queste accortezze, di ottenere una qualità dei dati \cite{data_quality_considerations} migliore possibile.
+queste accortezze, di ottenere una qualità dei dati \cite{data_quality_considerations} migliore possibile.\\
 
 \subsection{Pulitura e processamento}
 
