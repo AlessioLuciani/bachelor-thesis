@@ -4,8 +4,9 @@
 \subsection{Raccolta}
 Al fine di poter creare un classificatore per i tipi di parcheggio, la prima cosa
 che è risultata necessaria è stata una raccolta di dati (una vista ad alto livello del
-flusso di operazioni di raccolta è mostrata nella figura 
-\ref{flow_diagram_raccolta_dati}) di natura time-series. In particolare, questi dati
+flusso di operazioni di raccolta è mostrata nella 
+Figura~\ref{fig:flow_diagram_raccolta_dati}) di natura time-series.
+In particolare, questi dati
 dovevano essere di buona qualità, generati in maniera controllata e avere una chiara
 classificazione che gli permetta di essere utilizzabili per un processo di training
 \cite{pattern_extraction_time_series}.
@@ -16,7 +17,7 @@ commettendo il minor numero di errori possibile.\\
     \centering
     \includegraphics[width=14cm]{images/flow_diagram_raccolta_dati.png}
     \caption{Diagramma di flusso della raccolta dati.}
-    \label{flow_diagram_raccolta_dati}
+    \label{fig:flow_diagram_raccolta_dati}
 \end{figure}
 Dal momento che il modello classificatore in questione è destinato ad essere utilizzato
 su applicativi mobile, e più in particolare sull'app GeneroCity, i dati che quest'ultimo
@@ -111,13 +112,31 @@ di feature da inviare come input al classificatore. Questi sensori sono principa
 \begin{itemize}
     \item bussola
     \item accelerometri \cite{activity_recognition_accelerometer}
+    (Figura~\ref{fig:accelerometer_axes})
     \item giroscopi
+    (Figura~\ref{fig:gyroscope_axes})
     \item GPS per la velocità
 \end{itemize}
 Con una certa cadenza, il raccoglitore registra i vari valori e li indicizza
 attraverso il timestamp dello specifico istante. Questa indicizzazione fa in modo
 che i dati possano avere l'informazione sulla sequenza temporale delle varie
 registrazioni e quindi possono essere trattati come dati di tipo time-series.
+
+\begin{figure}
+    \centering
+    \begin{minipage}{.4\textwidth}
+        \centering
+        \includegraphics[width=5cm]{images/accelerometer_axes.png}
+        \captionof{figure}{Disposizione degli assi dell'accelerometro sullo smartphone.}
+        \label{fig:accelerometer_axes}
+    \end{minipage}
+    \begin{minipage}{.4\textwidth}
+        \centering
+        \includegraphics[width=5cm]{images/gyroscope_axes.png}
+        \captionof{figure}{Disposizione degli assi del giroscopio sullo smartphone.}
+        \label{fig:gyroscope_axes}
+    \end{minipage}
+\end{figure}
 
 \subsection{Implementazione su iOS}
 
@@ -182,7 +201,8 @@ Come formato di salvataggio delle registrazioni è stato scelto JSON
 \cite{javascript_object_notation} \cite{json_data_exchanging}. 
 Quindi, non appena
 il raccoglitore termina la raccolta, il buffer ottenuto deve essere convertito in un 
-oggetto JSON. In particolare, questo avviene ponendo, come chiavi dell'oggetto, i timestamp
+oggetto JSON (Figura~\ref{fig:esempio_campioni}). In particolare, questo avviene ponendo,
+come chiavi dell'oggetto, i timestamp
 calcolati rispetto al primo elemento. Ad ogni chiave viene associato un'array di valori, che
 contiene tutti i dati ottenuti dal campione di quello specifico istante. Così l'array è
 composto da:
@@ -197,6 +217,16 @@ relativi al parcheggio che è stato appena effettuato, è stato deciso di sfrutt
 anche per caricare l'oggetto JSON che contiene i campioni. Così è stato creato un nuovo campo
 nel database, relativo al parcheggio e chiamato \emph{parksamples}. All'interno di questo campo
 viene salvata la stringa serializzata, ottenuta dall'oggetto JSON.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=13cm]{images/esempio_campioni.png}
+    \caption{Esempio di una registrazione di campioni, sottoforma di oggetto JSON. Ad ogni 
+    timestamp, è associato l'array di valori formato rispettivamente da: \emph{heading}, asse X 
+    accelerometro, asse Y accelerometro, asse Z accelerometro, asse X giroscopio, asse Y
+    giroscopio, asse Z giroscopio, \emph{speed}.}
+    \label{fig:esempio_campioni}
+\end{figure}
 
 \section{Preparazione dei dati} 
 

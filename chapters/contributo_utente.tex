@@ -1,7 +1,7 @@
 \chapter{Contributo dell'utente}
 
 Come è stato già discusso, nell'ambito della raccolta dei dati il contributo dell'utente
-è essenziale. Infatti, è bene che quest'ultimo sia veritiero e che esso venga fornito per
+è essenziale. Infatti, è bene che quest'ultimo sia veritiero e che venga fornito per
 il maggior numero di registrazioni possibile. Per agevolare l'utente nel dare il contributo
 è stato necessario creare un'interazione semplice e che non richiedesse procedure troppo 
 sofisticate.\\
@@ -9,17 +9,23 @@ Dato che l'informazione che deve essere fornita dall'utente è una etichetta che
 il tipo di parcheggio appena effettuato, è stato deciso di mostrare una notifica di sistema
 che proponesse questa scelta. Questa notifica viene chiaramente manifestata dal sistema
 sotto forma di notifica locale di GeneroCity e da modo di selezionare il tipo di parcheggio
-effettuato.
+effettuato (Figura~\ref{fig:flow_diagram_presentazione_notifica}).
+\begin{figure}
+    \centering
+    \includegraphics[width=10cm]{images/flow_diagram_presentazione_notifica.png}
+    \caption{Diagramma di flusso della presentazione della notifica.}
+    \label{fig:flow_diagram_presentazione_notifica}
+\end{figure}
 
 \section{Notifica mostrata}
 
 Su piattaforma iOS, è stata scelta la notifica di tipo \emph{Actionable Notification}.
-Le notifiche di questa tipologia permettono di aggiungere, oltre a del testo, un gruppo 
+Le notifiche di questa tipologia permettono di aggiungere, oltre al testo, un gruppo 
 di pulsanti, corrispondenti a delle azioni. Questa è risultata una soluzione ottima per 
 il nostro scopo. \'E stato potuto aggiungere del testo che chiedesse "In che modo hai
 parcheggiato?" e allegare dei pulsanti con le opzioni "A spina", "Parallelo", "A pettine".
 In questo modo, all'utente resta solo da rispondere alla notifica selezionando una 
-opzione tra quelle disponibili.
+opzione tra quelle disponibili (Figura~\ref{fig:presentazione_notifica}).
 
 \subsection{Registrazione della notifica}
 
@@ -35,6 +41,12 @@ di un tipo da una di un altro. Quindi, è stata creata una nuova categoria chiam
 state legate le varie azioni, che corrispondono ai tipi di parcheggio. Anche esse sono
 dotate di un identificatore che è utilizzato al momento della ricezione, per distinguerle
 tra tutte le azioni che l'app può ricevere.
+\begin{wrapfigure}{r}{5.5cm}
+    \caption{Schermata di GeneroCity con la notifica esposta.}
+    \label{fig:presentazione_notifica}
+    \includegraphics[width=6cm]{images/presentazione_notifica.png}
+    \end{wrapfigure} 
+
 
 \subsection{Esposizione della notifica}
 
