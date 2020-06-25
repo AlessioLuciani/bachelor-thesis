@@ -270,7 +270,8 @@ forme del cerchio e del rettangolo. La prima è utilizzata per mostrare la
 presenza di un certa zona di parcheggio e il proprio tipo, mentre la seconda
 rappresenta anche l'orientamento delle singole istanze, rispetto al nord geografico.\\
 In forma non definitiva, è stato associato un colore primario ad ogni tipo di 
-parcheggio e quindi questo verrà visualizzato dall'utente sulla mappa. Inoltre,
+parcheggio e quindi questo verrà visualizzato dall'utente sulla mappa 
+(Figura~\ref{fig:circle_overlays}). Inoltre,
 si fa uso di un'alto livello di trasparenza in ogni overlay, in modo da far 
 rafforzare la presenza di un colore, rispetto ad un altro, all'aumentare delle
 istanze di parcheggio che coinvolgono le stesse coordinate (o coordinate molto
@@ -290,7 +291,8 @@ una rappresentazione differente.
 Per quanto riguarda l'informazione sull'orientamento, si è pensato di riprodurre 
 sulla mappa una forma simile a quella del rettangolo del parcheggio vero e 
 proprio. Ovvero, si è provato a posizionare un overlay rettangolare alle coordinate
-del parcheggio, orientato rispetto all'angolo ottenuto dal valore dell'heading. 
+del parcheggio, orientato rispetto all'angolo ottenuto dal valore dell'heading
+(Figura~\ref{fig:polygon_overlays}). 
 \'E stato utilizzato un overlay poligonale, aggiungendo manualmente le coordinate
 relative agli angoli del rettangolo. Inizialmente sono stati definiti due coefficienti 
 di scostamento \textbf{ALPHA} e \textbf{BETA} per la formazione del rettangolo orientato 
@@ -354,6 +356,23 @@ automaticamente quando degli overlay vengono aggiunti o rimossi, tutte le figure
 dei parcheggi spariscono dallo schermo. Quando invece lo switch viene riattivato,
 viene forzata una nuova richiesta all'API e vengono renderizzati nuovamente i parcheggi
 presenti nella porzione di mappa visualizzata.
+
+\begin{figure}
+    \centering
+    \begin{minipage}{.4\textwidth}
+        \centering
+        \includegraphics[width=5cm]{images/circle_overlays.png}
+        \captionof{figure}{Mappa con la presenza di overlay di parcheggi circolari.}
+        \label{fig:circle_overlays}
+    \end{minipage}
+    \begin{minipage}{.4\textwidth}
+        \centering
+        \includegraphics[width=5cm]{images/polygon_overlays.png}
+        \captionof{figure}{Mappa con la presenza di overlay di parcheggi poligonali.}
+        \label{fig:polygon_overlays}
+    \end{minipage}
+\end{figure}
+
 
 \section{Approccio crowdsource}
 
