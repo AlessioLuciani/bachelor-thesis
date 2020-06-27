@@ -113,7 +113,8 @@ modi per ottenere un modello di questa tipologia:
 \end{itemize}
 Siccome per iniziare è stato integrato il modello soltanto nella versione
 iOS dell'app, è stata scelta la prima strada, ovvero generarlo con
-\emph{Create ML}. In questo modo non è stato necessario utilizzare
+\emph{Create ML} (Figura~\ref{fig:flow_diagram_deploy_modello}). 
+In questo modo non è stato necessario utilizzare
 strumenti più personalizzabili, ma molto più complessi e a basso
 livello, come TensorFlow.\\
 La scelta di \emph{Core ML} è stata ovvia, in quanto su iOS è l'unica
@@ -139,6 +140,12 @@ locale. Quindi, l'intera procedura, che va dal parcheggio
 dell'auto fino alla predizione del tipo di parcheggio, viene
 eseguita all'interno dell'app iOS, senza alcun sostegno di 
 servizi esterni.
+\begin{figure}
+    \centering
+    \includegraphics[width=14cm]{images/flow_diagram_deploy_modello.png}
+    \caption{Diagramma di flusso del deploy del modello.}
+    \label{fig:flow_diagram_deploy_modello}
+\end{figure}
 
 \section{Porting del processore di dati}
 
