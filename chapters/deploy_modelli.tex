@@ -469,7 +469,8 @@ un modello chiamato "ModelloEsempio.mlmodel", verranno generate le seguenti clas
 \subsection{Esecuzione delle predizioni}
 
 Le predizioni effettuate con il modello vengono eseguite subito dopo che l'auto viene 
-parcheggiata. Questo è possibile perchè gli unici dati che sono necessari al modello
+parcheggiata (Figura~\ref{fig:flow_diagram_predizione_tipo}). Questo è possibile perchè gli unici dati che sono necessari
+al modello
 sono quelli raccolti durante la guida e fino al momento del parcheggio. In questo modo,
 la procedura può essere intrapresa non appena viene chiamato il metodo \emph{Car.park()}.
 Dato che all'interno di \emph{Car.park()} veniva effettuata già una chiamata a 
@@ -499,6 +500,14 @@ applicati ai dati, vi è uno che predice questo angolo, attraverso un modello
 ML regressore, per applicare una rotazione 3D dei valori. Quindi, l'angolo ottenuto
 può essere utilizzato anche per calcolare il probabile (ma non certo) orientamento
 dell'auto.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=14cm]{images/flow_diagram_predizione_tipo.png}
+    \caption{Diagramma di flusso della predizione del tipo di parcheggio.}
+    \label{fig:flow_diagram_predizione_tipo}
+\end{figure}
+
 
 \subsubsection{Caricamento etichetta ML nel database}
 
