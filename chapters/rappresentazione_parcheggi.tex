@@ -174,7 +174,8 @@ rispettati per garantire la fattibilità di questa funzionalità:
 Con lo scopo di soddisfare tutti questi requisiti, è stato progettato un algoritmo di 
 scaricamento dei parcheggi che effettua diversi controlli prima di procedere con una 
 nuova richiesta. \'E stata così definita una classe \emph{ParkingOverlaysLoader}, 
-responsabile dell'esecuzione delle richieste all'API. Un'istanza di questa classe
+responsabile dell'esecuzione delle richieste all'API
+(Figura~\ref{fig:flow_diagram_parkings_retrieval}). Un'istanza di questa classe
 viene gestita dalla mappa. In particolare, vengono sfruttati degli eventi generati
 dalla mappa per chiamare il metodo \emph{load()} di \emph{ParkingOverlaysLoader} e
 quindi effettuare una nuova richiesta, se questa viene permessa.\\
@@ -231,6 +232,14 @@ e inviata la richiesta. I parametri \textbf{deltaLat} e \textbf{deltaLon} vengon
 il doppio dello scostamento che dal centro della mappa va fino al bordo della porzione
 di area visibile. In questo modo, il server risponderà con una lista di parcheggi che 
 include anche le istanze che si trovano nelle estreme vicinanze dell'area visibile.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=14cm]{images/flow_diagram_parkings_retrieval.png}
+    \caption{Diagramma di flusso delle richieste dei parcheggi.}
+    \label{fig:flow_diagram_parkings_retrieval}
+\end{figure}
+
 
 \section{Disegno dei parcheggi sulla mappa} 
 
