@@ -34,7 +34,15 @@ Innanzitutto, la dimensione del dataset al momento della scrittura è ancora
 insufficiente per permettere di ottenere dei modelli abbastanza maturi. Dunque,
 come prima cosa si cercherà di coinvolgere un gruppo più grande di utenti
 per raccogliere molti altri dati in tempi ragionevoli.\\
-
-stima nel database di parcheggi veri e propri
-
-aggiunta della considerazione del tipo di parcheggio nell'algoritmo di matching
+Tra le funzionalità descritte vi è quella della rappresentazione dei parcheggi 
+sulla mappa. Questa rappresentazione tiene conto di tutte le istanze di parcheggio
+effettuate da utenti reali, quindi di ogni singolo parcheggio registrato, non 
+considerando l'accuratezza di questi parcheggi. Uno sviluppo che potrebbe essere
+fatto riguarda un miglioramento nel salvataggio dei parcheggi nel database. Infatti,
+potrebbero venir usate le singole istanze, insieme ad altre informazioni, per
+ottenere una stima di dove si trovi veramente un certo posteggio. In questo modo
+si otterrebbe un insieme di parcheggi classificati più accuratamente.\\
+Un'altra prossima aggiunta che verrà fatta sarà il miglioramento dell'algoritmo
+di matching, tenendo conto dell'informazione sul tipo di parcheggio. Cosí sarà 
+possibile evitare match il cui scambio risulta impossibile a causa delle dimensioni
+diverse delle due auto.
