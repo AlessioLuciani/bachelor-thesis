@@ -115,7 +115,6 @@ Qualora nel database alcuni di questi campi non fossero obbligatori, i rispettiv
 restituiti potrebbero essere nulli.\\
 All'interno del modulo API dell'app Generocity iOS è stata quindi aggiunta una una funzione
 di interfaccia, in grado di effettuare una chiamata alla funzionalità backend appena descritta.
-% TODO: maybe add a picture of the architecture for the call (frontend > backend > DB -<)
 Tra i vari parametri della funzione è presente una callback, che viene eseguita nel momento in cui
 viene ricevuta la risposta dal server. Questa callback contiene un oggetto JSON, che è esattamente
 la lista delle istanze dei parcheggi trovati. In questo modo, è possibile ottenere la lista desiderata in maniera asincrona, direttamente con una chiamata a funzione. 
@@ -187,7 +186,7 @@ lasciar gestire al \emph{ParkingOverlaysLoader} la scelta di compiere o no una
 nuova richiesta.\\
 Dopo la prima chiamata, che genera sempre una richiesta all'API, entreranno in regime
 una serie di condizioni che ogni volta controlleranno se sia il caso di procedere con
-una nuova richiesta. Sono utilizzate delle variabili che mantengono lo stato del 
+una nuova richiesta (Figura~\ref{fig:snippet_parkings_loading}). Sono utilizzate delle variabili che mantengono lo stato del 
 \emph{ParkingOverlaysLoader}: \textbf{lastQueryTimestamp} in cui viene salvato 
 l'istante dell'ultima richiesta e \textbf{lastQueryRegion} in cui viene invece 
 ricordata l'area per cui è stata fatta l'ultima richiesta. Definendo 
@@ -224,7 +223,6 @@ variare anche venendo rimpicciolita o ingrandita, e non solo venendo traslata. Q
 può accadere che l'utente rimpicciolisca la mappa e quindi esca fuori dalla zona coperta
 dall'ultimo scaricamento. La terza condizione in "and" logico controlla che questo
 non accada.\\
-
 Se almeno una di queste macro-condizioni è soddisfatta, la richiesta all'API viene 
 interrotta, altrimenti vengono aggiornate le variabili con i dati attuali e si prosegue.\\
 Quindi viene effettivamente chiamata la funzione collegata all'API (definita in precedenza)
@@ -232,6 +230,13 @@ e inviata la richiesta. I parametri \textbf{deltaLat} e \textbf{deltaLon} vengon
 il doppio dello scostamento che dal centro della mappa va fino al bordo della porzione
 di area visibile. In questo modo, il server risponderà con una lista di parcheggi che 
 include anche le istanze che si trovano nelle estreme vicinanze dell'area visibile.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=14cm]{images/snippet_parkings_loading.png}
+    \caption{Frammento di codice utilizzato per il caricamento di nuovi parcheggi.}
+    \label{fig:snippet_parkings_loading}
+\end{figure}
 
 \begin{figure}
     \centering
@@ -289,7 +294,6 @@ accuratezza per un certo tipo di parcheggio (essendoci molte istanze dello stess
 tipo che si sovrappongono). Inoltre, le istanze di parcheggio molto vicine le une alle
 altre vanno a colorare una intera zona in maniera abbastanza omogenea, e così mostrano
 la presenza di un'intera area di posteggio.\\
-% TODO: add screenshot with circles
 Tuttavia, questo modo di rappresentare 
 l'informazione non è risultato molto intuitivo per l'utente e quindi sarà utilizzato 
 a scopo di sviluppo, mentre per il rilascio effettivo dell'applicazione verrà predisposta
@@ -323,7 +327,8 @@ rotazione deve essere applicata nel senso opposto), convertito in radianti.
         \sin{\theta} & cos{\theta}
     \end{bmatrix}$
 \end{center}
-Infine è stato applicata una traslazione, date le coordinate del parcheggio.
+Infine è stato applicata una traslazione, date le coordinate del parcheggio
+(Figura~\ref{fig:snippet_lot_corners_coordinates}).
 \begin{center}
     $CLLocationCoordinate2D($\\
     $latitude: \textbf{center.latitude} + $ \\
@@ -331,7 +336,6 @@ Infine è stato applicata una traslazione, date le coordinate del parcheggio.
     $longitude: \textbf{center.longitude} + $ \\
     $(\textbf{point}[0] * cos(\textbf{angle})) - (\textbf{point}[1] * sin(\textbf{angle})))$
 \end{center}
-% TODO: add screenshot with rectangles
 Questa funzione si trova in stadio sperimentale, in quanto l'accuratezza del valore
 dell'heading non è abbastanza elevata per rappresentare un orientamento realistico, 
 bensì in diversi casi può accadere che il parcheggio venga orientato diversamente 
@@ -341,6 +345,13 @@ sviluppo futuro, si potrebbero fare più controlli sul salvataggio di parcheggi 
 database, magari cercando di capire quali istanze appartengono allo stesso posteggio
 reale e quindi anche ottenere dati più accurati, combinando quelli provenienti da 
 diverse istanze di uno stesso parcheggio.
+\begin{figure}
+    \centering
+    \includegraphics[width=14cm]{images/snippet_lot_corners_coordinates.png}
+    \caption{Frammento di codice utilizzato per il calcolo delle coordinate agli angoli
+    di un parcheggio.}
+    \label{fig:snippet_lot_corners_coordinates}
+\end{figure}
 
 \subsection{Rendering dei parcheggi}
 
