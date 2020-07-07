@@ -18,15 +18,16 @@
 \maketitle
 \dedication{Alla mia famiglia}
 \tableofcontents
-\mainmatter
 \large
-\import{./chapters/}{introduzione}
+\input{introduzione.tex}
+\mainmatter
 \import{./chapters/}{raccolta_dati}
 \import{./chapters/}{contributo_utente}
 \import{./chapters/}{deploy_modelli}
 \import{./chapters/}{rappresentazione_parcheggi}
 \import{./chapters/}{conclusioni}
 \backmatter
+\input{ringraziamenti.tex}
 \cleardoublepage
 \phantomsection % Give this command only if hyperref is loaded
 \addcontentsline{toc}{chapter}{\bibname}
